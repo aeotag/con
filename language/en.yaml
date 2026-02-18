@@ -1,0 +1,188 @@
+# ============================================================================
+# con - English language strings
+# ============================================================================
+
+general:
+  yes: "y"
+  no: "n"
+  cancelled: "Cancelled."
+  error: "Error"
+  warning: "Warning"
+  success: "Success"
+  confirm_yn: "(y/n)"
+  invalid_selection: "Invalid selection."
+  unknown_command: "Unknown command. Use 'con help' for usage."
+  version: "con version %s"
+
+# --- Init / Setup ---
+init:
+  welcome: "Welcome to con! Initializing configuration..."
+  created_configs: "Configuration files created in %s"
+  already_initialized: "Configuration already exists in %s"
+  setup_complete: "Setup complete! Run 'con help' to get started."
+
+# --- Config ---
+config:
+  lang_set: "Language set to '%s'."
+  lang_current: "Current language: %s"
+  setting_saved: "Setting saved."
+
+# --- Connection ---
+connection:
+  not_found: "Connection '%s' not found."
+  created: "Connection '%s' added to group '%s'."
+  deleted: "Connection '%s' deleted from group '%s'."
+  renamed: "Connection renamed: '%s' → '%s'"
+  moved: "Connection '%s' moved: '%s' → '%s'"
+  already_exists: "Connection '%s' already exists in group '%s'."
+  connecting: "Connecting to %s..."
+  select_address: "Select an address:"
+  ask_create: "Connection '%s' does not exist. Create it?"
+  enter_user: "User:"
+  enter_ip: "IP or hostname:"
+  enter_vpn: "VPN name (leave blank for none):"
+  enter_key: "SSH key filename (leave blank for auto):"
+  enter_protocol: "Protocol [ssh/telnet/tunnel] (default: ssh):"
+  select_group: "Select group number (or type a new group name):"
+  auto_connected: "Auto-connected via %s (%s)"
+  multiple_available: "Multiple connections available:"
+  no_reachable: "No reachable address found for '%s'."
+  testing_connectivity: "Testing connectivity to %s..."
+  unreachable: "%s is unreachable."
+
+# --- Group ---
+group:
+  not_found: "Group '%s' not found."
+  created: "Group '%s' created."
+  deleted: "Group '%s' deleted."
+  renamed: "Group renamed: '%s' → '%s'"
+  already_exists: "Group '%s' already exists."
+  list_header: "Available groups:"
+  delete_confirm: "Delete group '%s' and all its connections?"
+
+# --- Show ---
+show:
+  header_all: "All connections:"
+  header_group: "Connections in group '%s':"
+  no_connections: "No connections configured."
+  protocol: "Protocol"
+  user: "User"
+  key: "Key"
+  addresses: "Addresses"
+  vpn: "VPN"
+  network: "Network"
+
+# --- VPN ---
+vpn:
+  header: "VPN Connections:"
+  no_vpns: "No VPN connections found on this system."
+  active: "Active"
+  inactive: "Inactive"
+  status_header: "VPN Status:"
+  activating: "Activating VPN: %s"
+  deactivating: "Deactivating VPN: %s"
+  activated: "VPN '%s' activated."
+  deactivated: "VPN '%s' deactivated."
+  all_deactivated: "All VPN connections deactivated."
+  already_active: "VPN '%s' is already active."
+  not_active: "VPN '%s' is not active."
+  required_not_active: "VPN '%s' is required but not active. Activate? (y/n)"
+  current_active: "Currently connected to VPN: %s. Use this connection?"
+
+# --- Oneshot ---
+oneshot:
+  not_found: "Oneshot '%s' not found."
+  created: "Oneshot '%s' created."
+  running: "Running oneshot '%s'..."
+  running_parallel: "Running (parallel) on %s — log: %s"
+  running_sequential: "Running (sequential) on %s — log: %s"
+  no_ssh_agent: "No SSH agent detected. Running sequentially."
+  no_connections: "No valid connections found for oneshot '%s'."
+  complete: "Oneshot '%s' complete."
+  ask_create: "Oneshot '%s' not found. Create it?"
+  enter_cmd: "Enter command(s) (one per line, empty line to finish):"
+  enter_vpn: "Required VPN (leave blank for none):"
+  enter_group: "Target group (leave blank for none):"
+  enter_connections: "Target connections (comma-separated, leave blank for entire group):"
+  log_saved: "Log saved: %s"
+
+# --- Oneshot Verify ---
+verify:
+  header: "Verification Results:"
+  passed: "✅ %s — All checks passed"
+  failed: "❌ %s — Check failed"
+  error_details: "   Error details:"
+  summary_all_pass: "✅ All %d device(s) passed."
+  summary_failures: "❌ %d of %d device(s) failed."
+  no_logs: "No log files found for verification."
+
+# --- AWS ---
+aws:
+  sso_logging_in: "Logging in with AWS SSO profile '%s'..."
+  sso_success: "AWS SSO login successful."
+  sso_failed: "AWS SSO login failed."
+  sso_no_profiles: "No SSO profiles configured."
+  sso_select_profile: "Select SSO profile:"
+  ca_logging_in: "Authenticating CodeArtifact for '%s'..."
+  ca_success: "CodeArtifact authentication successful."
+  ca_failed: "CodeArtifact authentication failed."
+  ca_no_repos: "No CodeArtifact repositories configured."
+  ca_select_repo: "Select CodeArtifact repository:"
+
+# --- Man / Help ---
+help:
+  main: |
+    Usage: con [command] [options]
+
+    Commands:
+      <name>                                  Connect to saved device by name
+      show [--group <group> | --all]          Show saved connections
+      --name <name> <user@ip>                 Quick-add and connect
+      --name <name> --group <g> <user@ip>     Quick-add to group and connect
+      --modify --group <old> <new>            Rename a group
+      --modify --name <old> <new>             Rename a connection
+      --modify --move <name> <group>          Move connection to group
+      --del group <group>                     Delete a group
+      --del name <name>                       Delete a connection
+      vpn [show|up|down|status]               VPN management
+      ons <name> [options]                    Run a oneshot
+      aws [sso|codeartifact] [options]        AWS operations
+      config lang <en|de|fi|auto>             Set language
+      init                                    Initialize/reset config
+      help / --help / man                     Show this help
+
+    Options:
+      --lang <code>                           Override language for this command
+
+  vpn: |
+    Usage: con vpn [command] [options]
+
+    Commands:
+      show                    List all system VPN connections with status
+      up <name>               Activate a VPN connection
+      down <name>             Deactivate a VPN connection
+      down --all              Deactivate all VPN connections
+      status                  Show currently active VPN(s)
+
+  oneshot: |
+    Usage: con ons <name> [options]
+
+    Run a saved oneshot command on one or more remote devices.
+
+    Options:
+      --group <group>         Target group
+      --vpn <vpn>             Required VPN
+      --cmd <command>         Override command
+      --tail <n>              Show last N lines of output
+      --search <regex>        Search logs for pattern
+      --parallel              Force parallel execution
+      --sequential            Force sequential execution
+
+  aws: |
+    Usage: con aws [command] [options]
+
+    Commands:
+      sso login [--profile <name>]          AWS SSO login
+      codeartifact login [--repo <name>]    CodeArtifact authentication
+      sso show                              List SSO profiles
+      codeartifact show                     List CodeArtifact repos

@@ -1,0 +1,35 @@
+# ============================================================================
+# con - AWS Configuration
+# Location: ~/.config/con/aws.yaml
+# ============================================================================
+
+sso: {}
+codeartifact: {}
+
+# --- Example SSO profiles (uncomment and edit): ---
+#
+# sso:
+#   production:
+#     profile_name: prod-sso
+#     region: eu-central-1
+#   staging:
+#     profile_name: stage-sso
+#     region: eu-central-1
+
+# --- Example CodeArtifact repos (uncomment and edit): ---
+#
+# codeartifact:
+#   internal-pypi:
+#     domain: my-company
+#     domain_owner: "123456789012"
+#     repository: python-internal
+#     region: eu-central-1
+#     profile: prod-sso
+#     tool: pip
+#   npm-registry:
+#     domain: my-company
+#     domain_owner: "123456789012"
+#     repository: npm-internal
+#     region: eu-central-1
+#     profile: prod-sso
+#     tool: npm

@@ -1,0 +1,178 @@
+# ============================================================================
+# con - Deutsche Sprachstrings
+# ============================================================================
+
+general:
+  yes: "j"
+  no: "n"
+  cancelled: "Abgebrochen."
+  error: "Fehler"
+  warning: "Warnung"
+  success: "Erfolg"
+  confirm_yn: "(j/n)"
+  invalid_selection: "Ungültige Auswahl."
+  unknown_command: "Unbekannter Befehl. Nutze 'con help' für Hilfe."
+  version: "con Version %s"
+
+init:
+  welcome: "Willkommen bei con! Konfiguration wird initialisiert..."
+  created_configs: "Konfigurationsdateien erstellt in %s"
+  already_initialized: "Konfiguration existiert bereits in %s"
+  setup_complete: "Einrichtung abgeschlossen! Nutze 'con help' um loszulegen."
+
+config:
+  lang_set: "Sprache auf '%s' gesetzt."
+  lang_current: "Aktuelle Sprache: %s"
+  setting_saved: "Einstellung gespeichert."
+
+connection:
+  not_found: "Verbindung '%s' nicht gefunden."
+  created: "Verbindung '%s' zur Gruppe '%s' hinzugefügt."
+  deleted: "Verbindung '%s' aus Gruppe '%s' gelöscht."
+  renamed: "Verbindung umbenannt: '%s' → '%s'"
+  moved: "Verbindung '%s' verschoben: '%s' → '%s'"
+  already_exists: "Verbindung '%s' existiert bereits in Gruppe '%s'."
+  connecting: "Verbinde mit %s..."
+  select_address: "Adresse auswählen:"
+  ask_create: "Verbindung '%s' existiert nicht. Erstellen?"
+  enter_user: "Benutzer:"
+  enter_ip: "IP oder Hostname:"
+  enter_vpn: "VPN-Name (leer lassen für keins):"
+  enter_key: "SSH-Schlüssel Dateiname (leer lassen für Auto):"
+  enter_protocol: "Protokoll [ssh/telnet/tunnel] (Standard: ssh):"
+  select_group: "Gruppennummer wählen (oder neuen Gruppennamen eingeben):"
+  auto_connected: "Automatisch verbunden über %s (%s)"
+  multiple_available: "Mehrere Verbindungen verfügbar:"
+  no_reachable: "Keine erreichbare Adresse für '%s' gefunden."
+  testing_connectivity: "Teste Erreichbarkeit von %s..."
+  unreachable: "%s ist nicht erreichbar."
+
+group:
+  not_found: "Gruppe '%s' nicht gefunden."
+  created: "Gruppe '%s' erstellt."
+  deleted: "Gruppe '%s' gelöscht."
+  renamed: "Gruppe umbenannt: '%s' → '%s'"
+  already_exists: "Gruppe '%s' existiert bereits."
+  list_header: "Verfügbare Gruppen:"
+  delete_confirm: "Gruppe '%s' und alle Verbindungen löschen?"
+
+show:
+  header_all: "Alle Verbindungen:"
+  header_group: "Verbindungen in Gruppe '%s':"
+  no_connections: "Keine Verbindungen konfiguriert."
+  protocol: "Protokoll"
+  user: "Benutzer"
+  key: "Schlüssel"
+  addresses: "Adressen"
+  vpn: "VPN"
+  network: "Netzwerk"
+
+vpn:
+  header: "VPN-Verbindungen:"
+  no_vpns: "Keine VPN-Verbindungen auf diesem System gefunden."
+  active: "Aktiv"
+  inactive: "Inaktiv"
+  status_header: "VPN-Status:"
+  activating: "Aktiviere VPN: %s"
+  deactivating: "Deaktiviere VPN: %s"
+  activated: "VPN '%s' aktiviert."
+  deactivated: "VPN '%s' deaktiviert."
+  all_deactivated: "Alle VPN-Verbindungen deaktiviert."
+  already_active: "VPN '%s' ist bereits aktiv."
+  not_active: "VPN '%s' ist nicht aktiv."
+  required_not_active: "VPN '%s' wird benötigt, ist aber nicht aktiv. Aktivieren? (j/n)"
+  current_active: "Aktuell verbunden mit VPN: %s. Diese Verbindung nutzen?"
+
+oneshot:
+  not_found: "Oneshot '%s' nicht gefunden."
+  created: "Oneshot '%s' erstellt."
+  running: "Starte Oneshot '%s'..."
+  running_parallel: "Starte (parallel) auf %s — Log: %s"
+  running_sequential: "Starte (sequenziell) auf %s — Log: %s"
+  no_ssh_agent: "Kein SSH-Agent erkannt. Sequenzielle Ausführung."
+  no_connections: "Keine gültigen Verbindungen für Oneshot '%s' gefunden."
+  complete: "Oneshot '%s' abgeschlossen."
+  ask_create: "Oneshot '%s' nicht gefunden. Erstellen?"
+  enter_cmd: "Befehl(e) eingeben (einer pro Zeile, leere Zeile zum Beenden):"
+  enter_vpn: "Benötigtes VPN (leer lassen für keins):"
+  enter_group: "Zielgruppe (leer lassen für keine):"
+  enter_connections: "Zielverbindungen (kommagetrennt, leer lassen für ganze Gruppe):"
+  log_saved: "Log gespeichert: %s"
+
+verify:
+  header: "Überprüfungsergebnisse:"
+  passed: "✅ %s — Alle Prüfungen bestanden"
+  failed: "❌ %s — Prüfung fehlgeschlagen"
+  error_details: "   Fehlerdetails:"
+  summary_all_pass: "✅ Alle %d Gerät(e) bestanden."
+  summary_failures: "❌ %d von %d Gerät(en) fehlgeschlagen."
+  no_logs: "Keine Logdateien zur Überprüfung gefunden."
+
+aws:
+  sso_logging_in: "Anmeldung mit AWS SSO Profil '%s'..."
+  sso_success: "AWS SSO Anmeldung erfolgreich."
+  sso_failed: "AWS SSO Anmeldung fehlgeschlagen."
+  sso_no_profiles: "Keine SSO-Profile konfiguriert."
+  sso_select_profile: "SSO-Profil auswählen:"
+  ca_logging_in: "Authentifiziere CodeArtifact für '%s'..."
+  ca_success: "CodeArtifact Authentifizierung erfolgreich."
+  ca_failed: "CodeArtifact Authentifizierung fehlgeschlagen."
+  ca_no_repos: "Keine CodeArtifact-Repositories konfiguriert."
+  ca_select_repo: "CodeArtifact-Repository auswählen:"
+
+help:
+  main: |
+    Verwendung: con [Befehl] [Optionen]
+
+    Befehle:
+      <name>                                  Verbindung zu gespeichertem Gerät herstellen
+      show [--group <Gruppe> | --all]         Gespeicherte Verbindungen anzeigen
+      --name <Name> <user@ip>                 Schnell hinzufügen und verbinden
+      --name <Name> --group <G> <user@ip>     In Gruppe hinzufügen und verbinden
+      --modify --group <alt> <neu>            Gruppe umbenennen
+      --modify --name <alt> <neu>             Verbindung umbenennen
+      --modify --move <Name> <Gruppe>         Verbindung in Gruppe verschieben
+      --del group <Gruppe>                    Gruppe löschen
+      --del name <Name>                       Verbindung löschen
+      vpn [show|up|down|status]               VPN-Verwaltung
+      ons <Name> [Optionen]                   Oneshot ausführen
+      aws [sso|codeartifact] [Optionen]       AWS-Operationen
+      config lang <en|de|fi|auto>             Sprache einstellen
+      init                                    Konfiguration initialisieren/zurücksetzen
+      help / --help / man                     Diese Hilfe anzeigen
+
+    Optionen:
+      --lang <Code>                           Sprache für diesen Befehl überschreiben
+
+  vpn: |
+    Verwendung: con vpn [Befehl] [Optionen]
+
+    Befehle:
+      show                    Alle VPN-Verbindungen mit Status anzeigen
+      up <Name>               VPN-Verbindung aktivieren
+      down <Name>             VPN-Verbindung deaktivieren
+      down --all              Alle VPN-Verbindungen deaktivieren
+      status                  Aktive VPN-Verbindung(en) anzeigen
+
+  oneshot: |
+    Verwendung: con ons <Name> [Optionen]
+
+    Gespeicherten Oneshot-Befehl auf Geräten ausführen.
+
+    Optionen:
+      --group <Gruppe>        Zielgruppe
+      --vpn <VPN>             Benötigtes VPN
+      --cmd <Befehl>          Befehl überschreiben
+      --tail <n>              Letzte N Zeilen der Ausgabe anzeigen
+      --search <regex>        Logs nach Muster durchsuchen
+      --parallel              Parallele Ausführung erzwingen
+      --sequential            Sequenzielle Ausführung erzwingen
+
+  aws: |
+    Verwendung: con aws [Befehl] [Optionen]
+
+    Befehle:
+      sso login [--profile <Name>]          AWS SSO Anmeldung
+      codeartifact login [--repo <Name>]    CodeArtifact Authentifizierung
+      sso show                              SSO-Profile anzeigen
+      codeartifact show                     CodeArtifact-Repos anzeigen

@@ -1,0 +1,57 @@
+# ============================================================================
+# con - Oneshot Configuration
+# Location: ~/.config/con/oneshot.yaml
+# ============================================================================
+# Define reusable batch commands to run on remote devices.
+#
+# Structure:
+#   <oneshot_name>:
+#     group: <group_name>                 # target group (optional)
+#     connections: [name1, name2]          # specific targets (optional)
+#     vpn: <vpn_name>                     # required VPN (optional)
+#     parallel: true|false                # execution mode
+#     cmd: "single command"               # simple command
+#     cmds:                               # multi-step commands
+#       - "command 1"
+#       - "command 2"
+#     variables:                          # custom variables for {{var}}
+#       my_var: "value"
+#     verify:                             # log verification (optional)
+#       search: "regex pattern"           # search logs for this pattern
+#       show_after_match: true            # show lines from match onward
+#       tail: 15                          # show last N lines
+#       expect: "passed"                  # keyword expected for success
+# ============================================================================
+
+# --- Example entries (uncomment and edit): ---
+#
+# run-tests:
+#   group: stage
+#   connections:
+#     - stage9
+#     - stage10
+#   vpn: office-wg
+#   parallel: true
+#   cmd: "cd /var/tests && pytest --tb=short"
+#   variables:
+#     test_suite: "integration"
+#   verify:
+#     search: "AssertionError"
+#     show_after_match: true
+#     tail: 15
+#     expect: "passed"
+#
+# deploy-update:
+#   group: stage
+#   parallel: false
+#   cmds:
+#     - "sudo apt-get update"
+#     - "sudo apt-get upgrade -y"
+#   verify:
+#     tail: 5
+#     expect: "0 not upgraded"
+#
+# check-uptime:
+#   group: stage
+#   cmd: "uptime"
+#   parallel: true

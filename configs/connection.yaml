@@ -1,0 +1,70 @@
+# ============================================================================
+# con - Example Connection Configuration
+# Location: ~/.config/con/connection.yaml
+# ============================================================================
+# This file is auto-created by `con init`. Edit to add your connections.
+#
+# Structure:
+#   <group_name>:
+#     <device_name>:
+#       protocol: ssh|telnet|tunnel   # default: ssh
+#       user: <username>
+#       key: <ssh_key_filename>       # optional, looked up in ~/.ssh/
+#       addresses:
+#         - ip: <ip_or_hostname>
+#           network: local            # reachable without VPN
+#         - ip: <ip_or_hostname>
+#           vpn: <vpn_friendly_name>  # requires this VPN to be active
+#           type: wireguard|openvpn   # VPN type (informational)
+#       # Tunnel-specific (protocol: tunnel):
+#       instance_id: i-0abc123...
+#       tunnel_type: ssm-session|ssm-port-forward|ec2-instance-connect
+#       aws_profile: <profile_name>
+#       aws_region: <region>
+#       port: 23                      # telnet port (default 23)
+# ============================================================================
+
+default: {}
+
+# --- Example entries (uncomment and edit): ---
+#
+# stage:
+#   stage9:
+#     protocol: ssh
+#     user: pi
+#     key: id_ed25519
+#     addresses:
+#       - ip: 10.1.40.209
+#         network: local
+#       - ip: 10.8.0.2
+#         vpn: office-wg
+#         type: wireguard
+#       - ip: 172.16.0.5
+#         vpn: company-ovpn
+#         type: openvpn
+#
+#   stage10:
+#     protocol: ssh
+#     user: pi
+#     key: id_ed25519
+#     addresses:
+#       - ip: 10.1.40.210
+#         network: local
+#
+# switches:
+#   core-switch:
+#     protocol: telnet
+#     user: admin
+#     addresses:
+#       - ip: 192.168.1.1
+#         network: local
+#     port: 23
+#
+# aws:
+#   prod-bastion:
+#     protocol: tunnel
+#     tunnel_type: ssm-session
+#     instance_id: i-0abc123def456
+#     aws_profile: production
+#     aws_region: eu-central-1
+#     user: ec2-user

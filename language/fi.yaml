@@ -1,0 +1,178 @@
+# ============================================================================
+# con - Suomenkieliset merkkijonot
+# ============================================================================
+
+general:
+  yes: "k"
+  no: "e"
+  cancelled: "Peruutettu."
+  error: "Virhe"
+  warning: "Varoitus"
+  success: "Onnistui"
+  confirm_yn: "(k/e)"
+  invalid_selection: "Virheellinen valinta."
+  unknown_command: "Tuntematon komento. Käytä 'con help' saadaksesi ohjeita."
+  version: "con versio %s"
+
+init:
+  welcome: "Tervetuloa coniin! Alustetaan asetuksia..."
+  created_configs: "Asetustiedostot luotu kansioon %s"
+  already_initialized: "Asetukset ovat jo olemassa kansiossa %s"
+  setup_complete: "Asennus valmis! Käytä 'con help' aloittaaksesi."
+
+config:
+  lang_set: "Kieli asetettu: '%s'."
+  lang_current: "Nykyinen kieli: %s"
+  setting_saved: "Asetus tallennettu."
+
+connection:
+  not_found: "Yhteyttä '%s' ei löydy."
+  created: "Yhteys '%s' lisätty ryhmään '%s'."
+  deleted: "Yhteys '%s' poistettu ryhmästä '%s'."
+  renamed: "Yhteys nimetty uudelleen: '%s' → '%s'"
+  moved: "Yhteys '%s' siirretty: '%s' → '%s'"
+  already_exists: "Yhteys '%s' on jo olemassa ryhmässä '%s'."
+  connecting: "Yhdistetään kohteeseen %s..."
+  select_address: "Valitse osoite:"
+  ask_create: "Yhteyttä '%s' ei ole olemassa. Luodaanko?"
+  enter_user: "Käyttäjä:"
+  enter_ip: "IP tai palvelinnimi:"
+  enter_vpn: "VPN-nimi (jätä tyhjäksi jos ei ole):"
+  enter_key: "SSH-avaintiedosto (jätä tyhjäksi automaattista varten):"
+  enter_protocol: "Protokolla [ssh/telnet/tunnel] (oletus: ssh):"
+  select_group: "Valitse ryhmänumero (tai kirjoita uusi ryhmänimi):"
+  auto_connected: "Yhdistetty automaattisesti: %s (%s)"
+  multiple_available: "Useita yhteyksiä saatavilla:"
+  no_reachable: "Yhteyttä '%s' ei saavuteta."
+  testing_connectivity: "Testataan yhteyttä kohteeseen %s..."
+  unreachable: "%s ei ole tavoitettavissa."
+
+group:
+  not_found: "Ryhmää '%s' ei löydy."
+  created: "Ryhmä '%s' luotu."
+  deleted: "Ryhmä '%s' poistettu."
+  renamed: "Ryhmä nimetty uudelleen: '%s' → '%s'"
+  already_exists: "Ryhmä '%s' on jo olemassa."
+  list_header: "Saatavilla olevat ryhmät:"
+  delete_confirm: "Poistetaanko ryhmä '%s' ja kaikki sen yhteydet?"
+
+show:
+  header_all: "Kaikki yhteydet:"
+  header_group: "Yhteydet ryhmässä '%s':"
+  no_connections: "Ei määritettyjä yhteyksiä."
+  protocol: "Protokolla"
+  user: "Käyttäjä"
+  key: "Avain"
+  addresses: "Osoitteet"
+  vpn: "VPN"
+  network: "Verkko"
+
+vpn:
+  header: "VPN-yhteydet:"
+  no_vpns: "VPN-yhteyksiä ei löydy järjestelmästä."
+  active: "Aktiivinen"
+  inactive: "Ei aktiivinen"
+  status_header: "VPN-tila:"
+  activating: "Aktivoidaan VPN: %s"
+  deactivating: "Deaktivoidaan VPN: %s"
+  activated: "VPN '%s' aktivoitu."
+  deactivated: "VPN '%s' deaktivoitu."
+  all_deactivated: "Kaikki VPN-yhteydet deaktivoitu."
+  already_active: "VPN '%s' on jo aktiivinen."
+  not_active: "VPN '%s' ei ole aktiivinen."
+  required_not_active: "VPN '%s' vaaditaan mutta ei ole aktiivinen. Aktivoidaanko? (k/e)"
+  current_active: "Tällä hetkellä yhdistetty VPN:ään: %s. Käytetäänkö tätä yhteyttä?"
+
+oneshot:
+  not_found: "Oneshotia '%s' ei löydy."
+  created: "Oneshot '%s' luotu."
+  running: "Suoritetaan oneshot '%s'..."
+  running_parallel: "Suoritetaan (rinnakkain) kohteessa %s — loki: %s"
+  running_sequential: "Suoritetaan (peräkkäin) kohteessa %s — loki: %s"
+  no_ssh_agent: "SSH-agenttia ei havaittu. Suoritetaan peräkkäin."
+  no_connections: "Oneshotille '%s' ei löydy kelvollisia yhteyksiä."
+  complete: "Oneshot '%s' valmis."
+  ask_create: "Oneshotia '%s' ei löydy. Luodaanko?"
+  enter_cmd: "Syötä komento(t) (yksi per rivi, tyhjä rivi lopettaa):"
+  enter_vpn: "Vaadittu VPN (jätä tyhjäksi jos ei ole):"
+  enter_group: "Kohderyhmä (jätä tyhjäksi jos ei ole):"
+  enter_connections: "Kohdeyhteydet (pilkuilla eroteltuna, jätä tyhjäksi koko ryhmää varten):"
+  log_saved: "Loki tallennettu: %s"
+
+verify:
+  header: "Tarkistustulokset:"
+  passed: "✅ %s — Kaikki tarkistukset läpi"
+  failed: "❌ %s — Tarkistus epäonnistui"
+  error_details: "   Virhetiedot:"
+  summary_all_pass: "✅ Kaikki %d laite(tta) läpäisi."
+  summary_failures: "❌ %d / %d laite(tta) epäonnistui."
+  no_logs: "Lokitiedostoja ei löydy tarkistettavaksi."
+
+aws:
+  sso_logging_in: "Kirjaudutaan AWS SSO -profiililla '%s'..."
+  sso_success: "AWS SSO -kirjautuminen onnistui."
+  sso_failed: "AWS SSO -kirjautuminen epäonnistui."
+  sso_no_profiles: "SSO-profiileja ei ole määritetty."
+  sso_select_profile: "Valitse SSO-profiili:"
+  ca_logging_in: "Todennetaan CodeArtifact: '%s'..."
+  ca_success: "CodeArtifact-todennus onnistui."
+  ca_failed: "CodeArtifact-todennus epäonnistui."
+  ca_no_repos: "CodeArtifact-repositorioita ei ole määritetty."
+  ca_select_repo: "Valitse CodeArtifact-repositorio:"
+
+help:
+  main: |
+    Käyttö: con [komento] [valinnat]
+
+    Komennot:
+      <nimi>                                  Yhdistä tallennettuun laitteeseen
+      show [--group <ryhmä> | --all]          Näytä tallennetut yhteydet
+      --name <nimi> <user@ip>                 Lisää nopeasti ja yhdistä
+      --name <nimi> --group <r> <user@ip>     Lisää ryhmään ja yhdistä
+      --modify --group <vanha> <uusi>         Nimeä ryhmä uudelleen
+      --modify --name <vanha> <uusi>          Nimeä yhteys uudelleen
+      --modify --move <nimi> <ryhmä>          Siirrä yhteys ryhmään
+      --del group <ryhmä>                     Poista ryhmä
+      --del name <nimi>                        Poista yhteys
+      vpn [show|up|down|status]               VPN-hallinta
+      ons <nimi> [valinnat]                   Suorita oneshot
+      aws [sso|codeartifact] [valinnat]       AWS-toiminnot
+      config lang <en|de|fi|auto>             Aseta kieli
+      init                                    Alusta/nollaa asetukset
+      help / --help / man                     Näytä tämä ohje
+
+    Valinnat:
+      --lang <koodi>                          Ohita kieli tälle komennolle
+
+  vpn: |
+    Käyttö: con vpn [komento] [valinnat]
+
+    Komennot:
+      show                    Näytä kaikki VPN-yhteydet ja niiden tila
+      up <nimi>               Aktivoi VPN-yhteys
+      down <nimi>             Deaktivoi VPN-yhteys
+      down --all              Deaktivoi kaikki VPN-yhteydet
+      status                  Näytä aktiiviset VPN-yhteydet
+
+  oneshot: |
+    Käyttö: con ons <nimi> [valinnat]
+
+    Suorita tallennettu oneshot-komento etälaitteilla.
+
+    Valinnat:
+      --group <ryhmä>         Kohderyhmä
+      --vpn <vpn>             Vaadittu VPN
+      --cmd <komento>         Ohita komento
+      --tail <n>              Näytä viimeiset N riviä
+      --search <regex>        Hae lokeista kaavalla
+      --parallel              Pakota rinnakkaissuoritus
+      --sequential            Pakota peräkkäissuoritus
+
+  aws: |
+    Käyttö: con aws [komento] [valinnat]
+
+    Komennot:
+      sso login [--profile <nimi>]          AWS SSO -kirjautuminen
+      codeartifact login [--repo <nimi>]    CodeArtifact-todennus
+      sso show                              Näytä SSO-profiilit
+      codeartifact show                     Näytä CodeArtifact-repot

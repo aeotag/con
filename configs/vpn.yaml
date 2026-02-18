@@ -1,0 +1,28 @@
+# ============================================================================
+# con - VPN Configuration
+# Location: ~/.config/con/vpn.yaml
+# ============================================================================
+# Map friendly VPN names to system VPN connection names.
+# This allows you to use short names in connection configs.
+#
+# Structure:
+#   mappings:
+#     <friendly_name>:
+#       type: wireguard|openvpn|ipsec|l2tp
+#       system_name: "<exact name in nmcli/scutil/rasdial>"
+# ============================================================================
+
+mappings: {}
+
+# --- Example entries (uncomment and edit): ---
+#
+# mappings:
+#   office-wg:
+#     type: wireguard
+#     system_name: "wg-office"
+#   company-ovpn:
+#     type: openvpn
+#     system_name: "OpenVPN-Company"
+#   client-vpn:
+#     type: ipsec
+#     system_name: "IKEv2-ClientSite"
