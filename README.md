@@ -4,19 +4,55 @@ A unified CLI tool for managing SSH, Telnet, and AWS Secure Tunnel connections, 
 
 Written in Lua 5.4. Works on Linux, macOS, and Windows.
 
+## Installation
+
+### Automatic (recommended)
+
+Clone the repo and run the install script. It installs Lua, LuaRocks, LuaJIT, libyaml, and the `lyaml` Lua module, then sets up the shell alias.
+
+```bash
+git clone https://github.com/aeotag/con.git
+cd con
+bash install.sh
+```
+
+**Windows (PowerShell as Administrator):**
+
+```powershell
+git clone https://github.com/aeotag/con.git
+cd con
+.\install.ps1
+```
+
+**Supported systems:**
+
+| OS | Package Managers |
+|----|-----------------|
+| **Linux** | pacman (Arch/Manjaro), apt (Debian/Ubuntu), dnf (Fedora/RHEL), zypper (openSUSE), apk (Alpine), xbps (Void), emerge (Gentoo), nix (NixOS) |
+| **macOS** | Homebrew |
+| **Windows** | Chocolatey, Scoop |
+
+### Manual
+
+```bash
+# 1. Install Lua 5.4 and LuaRocks via your package manager
+# 2. Install lyaml
+luarocks install --local lyaml
+
+# 3. Set up the alias (fish shell)
+alias con 'lua ~/repos/con/main.lua'
+
+# 4. Initialize config files
+con init
+```
+
 ## Quick Start
 
 ```bash
-# 1. Set up the alias (fish shell)
-alias con="lua ~/repos/con/main.lua"
-
-# 2. Initialize config files
-con init
-
-# 3. Add a connection
+# Add a connection
 con --name stage9 --group stage pi@10.1.40.209
 
-# 4. Connect!
+# Connect!
 con stage9
 ```
 
