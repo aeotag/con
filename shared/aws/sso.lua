@@ -12,19 +12,19 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 --- Check if AWS CLI is available.
 --- @return boolean
-function M.is_available()
-    return packages.is_tool_installed("aws")
+function M.IsAvailable()
+    return packages.IsToolInstalled("aws")
 end
 
 --- Load AWS config from aws.yaml.
 --- @return table
-function M.load_aws_config()
-    return config_handler.load_or_create(Config.Paths.aws, {
+function M.LoadAwsConfig()
+    return config_handler.LoadOrCreate(Config.Paths.aws, {
         sso = {},
         codeartifact = {},
     })
@@ -32,13 +32,13 @@ end
 
 --- Save AWS config.
 --- @param data table
-function M.save_aws_config(data)
-    config_handler.save_yaml(Config.Paths.aws, data)
+function M.SaveAwsConfig(data)
+    config_handler.SaveYaml(Config.Paths.aws, data)
 end
 
 --- Show configured SSO profiles.
-function M.show_profiles()
-    local data = M.load_aws_config()
+function M.ShowProfiles()
+    local data = M.LoadAwsConfig()
     local profiles = data.sso or {}
 
     if not next(profiles) then
@@ -70,15 +70,15 @@ end
 
 --- Login via AWS SSO.
 --- @param profile_name string|nil  Profile name (from aws.yaml or direct AWS profile)
-function M.login(profile_name)
-    if not M.is_available() then
+function M.Login(profile_name)
+    if not M.IsAvailable() then
         print("AWS CLI is required. Install it first.")
         return
     end
 
     -- If no profile given, let user pick from configured profiles
     if not profile_name then
-        local data = M.load_aws_config()
+        local data = M.LoadAwsConfig()
         local profiles = data.sso or {}
 
         if not next(profiles) then
@@ -106,7 +106,7 @@ function M.login(profile_name)
     end
 
     print(L("aws.sso_logging_in", profile_name))
-    local cmd = "aws sso login --profile " .. profile_name
+    local cmd = "aws sso.Login --profile " .. profile_name
     local ok = os.execute(cmd)
 
     if ok == true or ok == 0 then

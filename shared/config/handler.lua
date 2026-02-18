@@ -10,8 +10,8 @@ local M = {}
 
 --- Ensure a directory exists (mkdir -p equivalent).
 --- @param path string
-function M.ensure_dir(path)
-    local os_name = require("shared.os.detect").detect_os()
+function M.EnsureDir(path)
+    local os_name = require("shared.os.detect").DetectOs()
     if os_name == "windows" then
         os.execute('mkdir "' .. path:gsub("/", "\\") .. '" 2>NUL')
     else
@@ -22,7 +22,7 @@ end
 --- Check if a file exists.
 --- @param path string
 --- @return boolean
-function M.file_exists(path)
+function M.FileExists(path)
     local f = io.open(path, "r")
     if f then f:close(); return true end
     return false
@@ -32,7 +32,7 @@ end
 --- @param path string  Path to the YAML file
 --- @return table|nil   Parsed data, or nil on error
 --- @return string|nil  Error message
-function M.load_yaml(path)
+function M.LoadYaml(path)
     local f, err = io.open(path, "r")
     if not f then
         return nil, "Could not open file: " .. tostring(err)
@@ -62,10 +62,10 @@ end
 --- @param data table   Data to serialize
 --- @return boolean     Success
 --- @return string|nil  Error message
-function M.save_yaml(path, data)
+function M.SaveYaml(path, data)
     -- Ensure parent directory exists
     local dir = path:match("(.+)/[^/]+$")
-    if dir then M.ensure_dir(dir) end
+    if dir then M.EnsureDir(dir) end
 
     local ok, content = pcall(yaml.dump, { data })
     if not ok then
@@ -86,15 +86,15 @@ end
 --- @param path string          File path
 --- @param defaults table|nil   Default data if file doesn't exist
 --- @return table               Loaded data
-function M.load_or_create(path, defaults)
+function M.LoadOrCreate(path, defaults)
     defaults = defaults or {}
 
-    if not M.file_exists(path) then
-        M.save_yaml(path, defaults)
+    if not M.FileExists(path) then
+        M.SaveYaml(path, defaults)
         return defaults
     end
 
-    local data, err = M.load_yaml(path)
+    local data, err = M.LoadYaml(path)
     if not data then
         print("Warning: " .. tostring(err) .. " — using defaults.")
         return defaults
@@ -104,20 +104,20 @@ function M.load_or_create(path, defaults)
 end
 
 --- Initialize all config files if they don't exist (first-run / con init).
-function M.init_configs()
-    M.ensure_dir(Config.Paths.config_dir)
-    M.ensure_dir(Config.Paths.logs)
+function M.InitConfigs()
+    M.EnsureDir(Config.Paths.config_dir)
+    M.EnsureDir(Config.Paths.logs)
 
     -- connection.yaml
-    if not M.file_exists(Config.Paths.connection) then
-        M.save_yaml(Config.Paths.connection, {
+    if not M.FileExists(Config.Paths.connection) then
+        M.SaveYaml(Config.Paths.connection, {
             default = {}
         })
     end
 
     -- vpn.yaml
-    if not M.file_exists(Config.Paths.vpn) then
-        M.save_yaml(Config.Paths.vpn, {
+    if not M.FileExists(Config.Paths.vpn) then
+        M.SaveYaml(Config.Paths.vpn, {
             mappings = {},
             -- example:
             -- mappings:
@@ -131,21 +131,21 @@ function M.init_configs()
     end
 
     -- oneshot.yaml
-    if not M.file_exists(Config.Paths.oneshot) then
-        M.save_yaml(Config.Paths.oneshot, {})
+    if not M.FileExists(Config.Paths.oneshot) then
+        M.SaveYaml(Config.Paths.oneshot, {})
     end
 
     -- aws.yaml
-    if not M.file_exists(Config.Paths.aws) then
-        M.save_yaml(Config.Paths.aws, {
+    if not M.FileExists(Config.Paths.aws) then
+        M.SaveYaml(Config.Paths.aws, {
             sso = {},
             codeartifact = {},
         })
     end
 
     -- .secrets
-    if not M.file_exists(Config.Paths.secrets) then
-        M.save_yaml(Config.Paths.secrets, {
+    if not M.FileExists(Config.Paths.secrets) then
+        M.SaveYaml(Config.Paths.secrets, {
             sshkeys = {},
             tools   = {},
         })
@@ -153,8 +153,8 @@ function M.init_configs()
 
     -- settings.yaml (language, defaults, etc.)
     local settings_path = Config.Paths.config_dir .. "/settings.yaml"
-    if not M.file_exists(settings_path) then
-        M.save_yaml(settings_path, {
+    if not M.FileExists(settings_path) then
+        M.SaveYaml(settings_path, {
             language = "auto",
             default_protocol = "ssh",
             parallel = true,
@@ -164,9 +164,9 @@ end
 
 --- Load user settings (language, defaults).
 --- @return table
-function M.load_settings()
+function M.LoadSettings()
     local path = Config.Paths.config_dir .. "/settings.yaml"
-    return M.load_or_create(path, {
+    return M.LoadOrCreate(path, {
         language = "auto",
         default_protocol = "ssh",
         parallel = true,
@@ -175,9 +175,9 @@ end
 
 --- Save user settings.
 --- @param settings table
-function M.save_settings(settings)
+function M.SaveSettings(settings)
     local path = Config.Paths.config_dir .. "/settings.yaml"
-    M.save_yaml(path, settings)
+    M.SaveYaml(path, settings)
 end
 
 return M

@@ -9,13 +9,13 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 --- Read a log file and return its lines.
 --- @param path string
 --- @return table|nil  Array of lines
-function M.read_log(path)
+function M.ReadLog(path)
     local f = io.open(path, "r")
     if not f then return nil end
     local lines = {}
@@ -30,7 +30,7 @@ end
 --- @param lines table   Array of lines
 --- @param n number      Number of lines
 --- @return table
-function M.tail(lines, n)
+function M.Tail(lines, n)
     if #lines <= n then return lines end
     local result = {}
     for i = #lines - n + 1, #lines do
@@ -45,7 +45,7 @@ end
 --- @param show_after boolean  If true, show all lines from the first match onward
 --- @return table              Array of { line_num, text } for matches
 --- @return table              Array of lines from first match onward (if show_after)
-function M.search(lines, pattern, show_after)
+function M.Search(lines, pattern, show_after)
     local matches = {}
     local first_match_idx = nil
 
@@ -73,8 +73,8 @@ end
 --- @param verify_config table  { search, show_after_match, tail, expect }
 --- @return boolean            passed
 --- @return table              details = { matched_lines, tail_lines, error_block }
-function M.verify_log(log_path, verify_config)
-    local lines = M.read_log(log_path)
+function M.VerifyLog(log_path, verify_config)
+    local lines = M.ReadLog(log_path)
     if not lines then
         return false, { error = "Could not read log file: " .. log_path }
     end
@@ -88,12 +88,12 @@ function M.verify_log(log_path, verify_config)
 
     -- Tail: show last N lines
     if verify_config.tail then
-        details.tail_lines = M.tail(lines, verify_config.tail)
+        details.tail_lines = M.Tail(lines, verify_config.tail)
     end
 
     -- Search: find pattern and optionally show everything after
     if verify_config.search then
-        local matches, after = M.search(
+        local matches, after = M.Search(
             lines,
             verify_config.search,
             verify_config.show_after_match
@@ -134,7 +134,7 @@ end
 --- @param log_files table       { device_name = log_path, ... }
 --- @param verify_config table   Verify configuration from oneshot YAML
 --- @param cli_overrides table|nil  { tail, search } from CLI flags
-function M.verify_all(log_files, verify_config, cli_overrides)
+function M.VerifyAll(log_files, verify_config, cli_overrides)
     -- Merge CLI overrides
     local vc = {}
     for k, v in pairs(verify_config or {}) do vc[k] = v end
@@ -164,7 +164,7 @@ function M.verify_all(log_files, verify_config, cli_overrides)
         local log_path = log_files[device_name]
         total = total + 1
 
-        local passed, details = M.verify_log(log_path, vc)
+        local passed, details = M.VerifyLog(log_path, vc)
 
         if passed then
             print(L("verify.passed", device_name))

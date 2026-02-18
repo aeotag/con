@@ -17,7 +17,7 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 --- Resolve variables in a command string.
@@ -25,7 +25,7 @@ end
 --- @param cmd string          Command template
 --- @param vars table          Variable values
 --- @return string
-function M.resolve_variables(cmd, vars)
+function M.ResolveVariables(cmd, vars)
     return cmd:gsub("{{(.-)}}", function(key)
         return vars[key] or ("{{" .. key .. "}}")
     end)
@@ -36,7 +36,7 @@ end
 --- @param entry table  Oneshot YAML entry
 --- @param cli_cmd string|nil  CLI override command
 --- @return table  Array of command strings
-function M.get_commands(entry, cli_cmd)
+function M.GetCommands(entry, cli_cmd)
     if cli_cmd then
         return { cli_cmd }
     end
@@ -54,8 +54,8 @@ end
 --- @param device_name string
 --- @param index number|nil
 --- @return string
-function M.log_path(oneshot_name, device_name, index)
-    config_handler.ensure_dir(Config.Paths.logs)
+function M.LogPath(oneshot_name, device_name, index)
+    config_handler.EnsureDir(Config.Paths.logs)
     local timestamp = os.date("%Y%m%d_%H%M%S")
     local idx_str = index and ("_" .. tostring(index)) or ""
     return string.format(
@@ -66,20 +66,20 @@ end
 
 --- Load oneshot definitions.
 --- @return table
-function M.load_oneshots()
-    return config_handler.load_or_create(Config.Paths.oneshot, {})
+function M.LoadOneshots()
+    return config_handler.LoadOrCreate(Config.Paths.oneshot, {})
 end
 
 --- Save oneshot definitions.
 --- @param data table
-function M.save_oneshots(data)
-    config_handler.save_yaml(Config.Paths.oneshot, data)
+function M.SaveOneshots(data)
+    config_handler.SaveYaml(Config.Paths.oneshot, data)
 end
 
 --- Interactive creation of a new oneshot.
 --- @param name string
 --- @return table|nil  Created entry
-function M.ask_create_oneshot(name)
+function M.AskCreateOneshot(name)
     io.write(L("oneshot.ask_create", name) .. " (y/n): ")
     local ans = io.read("*l")
     if ans ~= "y" and ans ~= "Y" then return nil end
@@ -132,9 +132,9 @@ function M.ask_create_oneshot(name)
     end
 
     -- Save
-    local data = M.load_oneshots()
+    local data = M.LoadOneshots()
     data[name] = entry
-    M.save_oneshots(data)
+    M.SaveOneshots(data)
     print(L("oneshot.created", name))
 
     return entry
@@ -143,8 +143,8 @@ end
 --- Collect all target connections for a oneshot entry.
 --- @param entry table              Oneshot definition
 --- @return table                   Array of { name, conn_data, group }
-function M.collect_targets(entry)
-    local conn_data_all = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.CollectTargets(entry)
+    local conn_data_all = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     local targets = {}
 
     -- If specific connections are listed
@@ -190,15 +190,15 @@ end
 --- Execute a oneshot.
 --- @param name string
 --- @param opts table|nil  CLI overrides: { group, vpn, cmd, tail, search, parallel, sequential }
-function M.run_oneshot(name, opts)
+function M.RunOneshot(name, opts)
     opts = opts or {}
 
-    local data = M.load_oneshots()
+    local data = M.LoadOneshots()
     local entry = data[name]
 
     -- Not found → ask to create
     if not entry then
-        entry = M.ask_create_oneshot(name)
+        entry = M.AskCreateOneshot(name)
         if not entry then return end
     end
 
@@ -213,28 +213,28 @@ function M.run_oneshot(name, opts)
     if opts.sequential then is_parallel = false end
 
     -- Check SSH agent for parallel mode
-    if is_parallel and not ssh.is_agent_ready() then
+    if is_parallel and not ssh.IsAgentReady() then
         print(L("oneshot.no_ssh_agent"))
         is_parallel = false
     end
 
     -- VPN activation
     if entry.vpn then
-        if not vpn_handler.ensure_vpn_active(entry.vpn) then
+        if not vpn_handler.EnsureVpnActive(entry.vpn) then
             print(L("general.cancelled"))
             return
         end
     end
 
     -- Collect targets
-    local targets = M.collect_targets(entry)
+    local targets = M.CollectTargets(entry)
     if #targets == 0 then
         print(L("oneshot.no_connections", name))
         return
     end
 
     -- Build commands
-    local commands = M.get_commands(entry, opts.cmd)
+    local commands = M.GetCommands(entry, opts.cmd)
     if #commands == 0 then
         print("No commands configured for oneshot '" .. name .. "'.")
         return
@@ -257,7 +257,7 @@ function M.run_oneshot(name, opts)
         local addresses = conn.addresses or {}
         local addr
         if #addresses > 0 then
-            local matches = vpn_handler.find_matching_addresses(addresses)
+            local matches = vpn_handler.FindMatchingAddresses(addresses)
             addr = matches[1] or addresses[1]
         end
 
@@ -279,19 +279,19 @@ function M.run_oneshot(name, opts)
                 end
             end
 
-            local resolved_cmd = M.resolve_variables(full_cmd, vars)
-            local log_file = M.log_path(name, device)
+            local resolved_cmd = M.ResolveVariables(full_cmd, vars)
+            local log_file = M.LogPath(name, device)
             log_files[device] = log_file
 
             local exec_cmd
             if protocol == "ssh" then
-                local keyfile = ssh.find_key(conn.key)
-                exec_cmd = ssh.build_exec_command(user, addr.ip, resolved_cmd, keyfile)
+                local keyfile = ssh.FindKey(conn.key)
+                exec_cmd = ssh.BuildExecCommand(user, addr.ip, resolved_cmd, keyfile)
             elseif protocol == "telnet" then
                 local port = addr.port or conn.port or 23
-                exec_cmd = telnet.build_exec_command(addr.ip, port, resolved_cmd)
+                exec_cmd = telnet.BuildExecCommand(addr.ip, port, resolved_cmd)
             elseif protocol == "tunnel" then
-                exec_cmd = tunnel_mod.build_exec_command(
+                exec_cmd = tunnel_mod.BuildExecCommand(
                     conn.instance_id, resolved_cmd, conn.aws_profile, conn.aws_region
                 )
             end
@@ -328,7 +328,7 @@ function M.run_oneshot(name, opts)
             tail   = opts.tail and tonumber(opts.tail) or nil,
             search = opts.search,
         }
-        verify.verify_all(log_files, entry.verify or {}, cli_overrides)
+        verify.VerifyAll(log_files, entry.verify or {}, cli_overrides)
     end
 end
 

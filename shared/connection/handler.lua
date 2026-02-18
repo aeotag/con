@@ -16,7 +16,7 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 -- ===========================================================================
@@ -27,7 +27,7 @@ end
 --- @param name string
 --- @param conn table
 --- @param indent number|nil
-local function print_connection(name, conn, indent)
+local function PrintConnection(name, conn, indent)
     indent = indent or 2
     local pad = string.rep(" ", indent)
     print(pad .. "📌 " .. name)
@@ -55,8 +55,8 @@ end
 
 --- Show connections: all, by group, or by name.
 --- @param group string|nil   Filter by group
-function M.show_connections(group)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.ShowConnections(group)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
 
     if group then
         -- Show specific group
@@ -69,7 +69,7 @@ function M.show_connections(group)
         local empty = true
         for name, conn in pairs(data[group]) do
             if type(conn) == "table" then
-                print_connection(name, conn)
+                PrintConnection(name, conn)
                 print("")
                 empty = false
             end
@@ -90,7 +90,7 @@ function M.show_connections(group)
                 print("━━ " .. g .. " ━━")
                 for name, conn in pairs(data[g]) do
                     if type(conn) == "table" then
-                        print_connection(name, conn)
+                        PrintConnection(name, conn)
                         print("")
                         any = true
                     end
@@ -109,16 +109,16 @@ end
 
 --- Main connect workflow: find connection, resolve VPN, connect.
 --- @param name string  Connection alias name
-function M.connect(name)
-    local conn_data, group = config_edit.find_connection(name)
+function M.Connect(name)
+    local conn_data, group = config_edit.FindConnection(name)
 
     -- Connection not found → ask to create
     if not conn_data then
         print(L("connection.not_found", name))
         if Config.Ask.create_missing then
-            config_edit.ask_create_connection(name)
+            config_edit.AskCreateConnection(name)
             -- Retry after creation
-            conn_data, group = config_edit.find_connection(name)
+            conn_data, group = config_edit.FindConnection(name)
             if not conn_data then return end
         else
             return
@@ -130,7 +130,7 @@ function M.connect(name)
     -- TUNNEL connections (AWS) — different workflow
     if protocol == "tunnel" then
         print(L("connection.connecting", name))
-        tunnel.connect(conn_data)
+        tunnel.Connect(conn_data)
         return
     end
 
@@ -142,7 +142,7 @@ function M.connect(name)
     end
 
     -- Find matching addresses (VPN that's currently active or no VPN needed)
-    local matches, all_info = vpn_handler.find_matching_addresses(addresses)
+    local matches, all_info = vpn_handler.FindMatchingAddresses(addresses)
 
     local target_addr
 
@@ -184,7 +184,7 @@ function M.connect(name)
             target_addr = addresses[sel]
             -- Activate VPN if needed
             if target_addr.vpn then
-                if not vpn_handler.ensure_vpn_active(target_addr.vpn) then
+                if not vpn_handler.EnsureVpnActive(target_addr.vpn) then
                     print(L("general.cancelled"))
                     return
                 end
@@ -201,20 +201,20 @@ function M.connect(name)
 
     if protocol == "ssh" then
         print(L("connection.testing_connectivity", ip))
-        if not ssh.ping(ip) then
+        if not ssh.Ping(ip) then
             print(L("connection.unreachable", ip))
             io.write("Try anyway? (y/n): ")
             local ans = io.read("*l")
             if ans ~= "y" and ans ~= "Y" then return end
         end
-        local keyfile = ssh.find_key(conn_data.key)
+        local keyfile = ssh.FindKey(conn_data.key)
         print(L("connection.connecting", user .. "@" .. ip))
-        ssh.connect(user, ip, keyfile)
+        ssh.Connect(user, ip, keyfile)
 
     elseif protocol == "telnet" then
         local port = target_addr.port or conn_data.port or 23
         print(L("connection.connecting", ip .. ":" .. tostring(port)))
-        telnet.connect(ip, port)
+        telnet.Connect(ip, port)
     end
 end
 
@@ -222,7 +222,7 @@ end
 --- @param name string
 --- @param user_at_ip string  "user@ip" format
 --- @param group string|nil   Group name (default: "default")
-function M.quick_add(name, user_at_ip, group)
+function M.QuickAdd(name, user_at_ip, group)
     group = group or "default"
     local user, ip = user_at_ip:match("^(.+)@(.+)$")
     if not user or not ip then
@@ -238,7 +238,7 @@ function M.quick_add(name, user_at_ip, group)
         },
     }
 
-    config_edit.add_connection(group, name, conn_data)
+    config_edit.AddConnection(group, name, conn_data)
 end
 
 return M
