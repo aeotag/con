@@ -81,6 +81,8 @@ Commands:
   --modify --group <old> <new>            Rename a group
   --modify --name <old> <new>             Rename a connection
   --modify --move <name> <group>          Move connection to group
+  export <type> <name>                    Export connection/group/oneshot
+  import <base64_string>                   Import from shared export string
   --del group <group>                     Delete a group
   --del name <name>                       Delete a connection
   vpn [show|up|down|status]               VPN management
@@ -106,6 +108,43 @@ All configs are stored in `~/.config/con/`:
 | `aws.yaml` | SSO profiles, CodeArtifact repos |
 | `settings.yaml` | Language, defaults |
 | `.secrets` | SSH key passwords, tool install state |
+
+## Import & Export
+
+Share connections, groups, or oneshots with your team via a single copy-paste line.
+
+### Export
+
+```bash
+# Export a single connection
+con export connection stage9
+
+# Export an entire group (all connections in it)
+con export group stage
+
+# Export a oneshot definition
+con export oneshot run-tests
+```
+
+This prints a one-liner like:
+```
+con import LS0tCmRhdGE6Ci...
+```
+
+### Import
+
+Your colleague pastes the line and the tool handles everything interactively:
+
+```bash
+con import LS0tCmRhdGE6Ci...
+```
+
+During import:
+- **VPN remapping**: If a connection uses a VPN (e.g. your WireGuard `y.pauli`), the tool searches the importer's `vpn.yaml` for a VPN of the same type (`wireguard`) and remaps automatically. If multiple match, it asks.
+- **SSH key**: Asks the user to pick from their `~/.ssh/` keys.
+- **Collisions**: If a connection name already exists, asks to overwrite, skip, or rename.
+- **Groups**: Asks which group to import into, with the option to create the exporter's original group.
+- **Oneshot references**: Warns if referenced groups/connections don't exist and offers to create them.
 
 ### Connection Example
 

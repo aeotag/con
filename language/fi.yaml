@@ -129,6 +129,57 @@ aws:
   ca_no_repos: "CodeArtifact-repositorioita ei ole määritetty."
   ca_select_repo: "Valitse CodeArtifact-repositorio:"
 
+transfer:
+  export_usage: "Käyttö: con export <connection|group|oneshot> <nimi>"
+  import_usage: "Käyttö: con import <base64-merkkijono>"
+  export_success: "Vienti onnistui (%s: %s)"
+  copy_line: "Kopioi ja jaa tämä rivi:"
+  decode_failed: "Tuontimerkkijonoa ei voitu purkaa. Onko se kelvollinen con-vienti?"
+  parse_failed: "Tuontitietoja ei voitu jäsentää. Merkkijono voi olla vioittunut."
+  invalid_payload: "Virheelliset tuontitiedot — tyyppi, nimi tai data puuttuu."
+  invalid_type: "Tuntematon vientityyppi: '%s'. Odotettu: connection, group, oneshot."
+  import_header: "Tuodaan %s: '%s'"
+  exported_with_version: "  (viety con v%s:lla)"
+  importing_connection: "Tuodaan yhteys '%s'..."
+  importing_group: "Tuodaan ryhmä '%s'..."
+  importing_oneshot: "Tuodaan oneshot '%s'..."
+  remapping_vpn: "  Tarkistetaan VPN-yhdistykset..."
+  vpn_auto_mapped: "%s: VPN yhdistetty uudelleen '%s' → '%s'"
+  vpn_multiple: "%s: Useita %s-VPN:iä löydetty järjestelmästäsi:"
+  vpn_select: "Valitse VPN-numero:"
+  vpn_no_match: "%s: %s-VPN:ää ei löydy asetuksistasi (alkuperäinen: '%s')"
+  vpn_keep_or_skip: "Säilytä alkuperäinen VPN-nimi (k) vai ohita osoite (s)?"
+  vpn_kept_original: "Alkuperäinen VPN-nimi säilytetty: '%s'"
+  address_skipped: "Osoite %s ohitettu."
+  select_ssh_key: "  Valitse SSH-avain:"
+  exported_key: "(viety avain: %s)"
+  original: "alkuperäinen"
+  no_ssh_keys: "  SSH-avaimia ei löydy kansiosta ~/.ssh/"
+  enter_number_or_keep: "Syötä numero (tai paina Enter säilyttääksesi):"
+  select_import_group: "  Valitse kohderyhmä:"
+  original_group: "alkuperäinen ryhmä"
+  create_new_from_export: "luo viennistä"
+  enter_group_number: "Syötä ryhmänumero (tai kirjoita uusi nimi):"
+  collision: "Yhteys '%s' on jo olemassa ryhmässä '%s'."
+  overwrite: "Korvaa"
+  skip: "Ohita"
+  rename: "Nimeä uudelleen"
+  select_action: "Valitse (1/2/3):"
+  enter_new_name: "Uusi nimi:"
+  enter_new_group_name: "Uusi ryhmänimi:"
+  skipped: "'%s' ohitettu."
+  connection_imported: "✅ Yhteys '%s' tuotu ryhmään '%s'."
+  group_exists: "Ryhmä '%s' on jo olemassa."
+  merge_into_existing: "Yhdistä olemassa olevaan ryhmään"
+  rename_group: "Käytä eri ryhmänimeä"
+  group_imported: "✅ Ryhmä '%s' tuotu (%d yhteyttä)."
+  oneshot_imported: "✅ Oneshot '%s' tuotu."
+  ons_missing_group: "Viitattu ryhmä '%s' ei ole olemassa."
+  ons_create_group: "Luodaanko? (k/e)"
+  ons_group_warning: "Oneshot viittaa ryhmään jota ei ole. Se ei toimi ennen kuin ryhmä luodaan."
+  ons_missing_connections: "Viitattuja yhteyksiä ei löydy: %s"
+  import_success: "Tuonti valmis."
+
 help:
   main: |
     Käyttö: con [komento] [valinnat]
@@ -145,6 +196,8 @@ help:
       --modify --address <nimi> <ip> [opts]   Lisää osoite (--vpn, --type, --network)
       --modify --rm-address <nimi> <ip>       Poista osoite
       --modify --set <nimi> <kenttä> <arvo>   Aseta kenttä (user, protocol, key, port...)
+      export <tyyppi> <nimi>                   Vie yhteys/ryhmä/oneshot yksiriviksi
+      import <base64-merkkijono>               Tuo jaetusta vientimerkkijonosta
       --del group <ryhmä>                     Poista ryhmä
       --del name <nimi>                        Poista yhteys
       vpn [show|up|down|status]               VPN-hallinta

@@ -46,6 +46,7 @@ lang.Init(lang_override)
 local function GetConnectionHandler() return require("shared.connection.handler") end
 local function GetConfigEdit()        return require("shared.config.edit") end
 local function GetConfigHandler()     return require("shared.config.handler") end
+local function GetTransfer()          return require("shared.config.transfer") end
 local function GetVpnHandler()        return require("shared.vpn.handler") end
 local function GetOneshotHandler()    return require("shared.oneshot.handler") end
 local function GetAwsSso()            return require("shared.aws.sso") end
@@ -210,6 +211,26 @@ elseif cmd == "edit" then
         GetConfigEdit().InteractiveEdit(args[2])
     else
         print("Usage: con edit <name>")
+    end
+
+-- ============================================================================
+-- EXPORT — Export connection/group/oneshot as base64 one-liner
+-- ============================================================================
+elseif cmd == "export" then
+    if args[2] and args[3] then
+        GetTransfer().Export(args[2], args[3])
+    else
+        print("Usage: con export <connection|group|oneshot> <name>")
+    end
+
+-- ============================================================================
+-- IMPORT — Import from base64 one-liner
+-- ============================================================================
+elseif cmd == "import" then
+    if args[2] then
+        GetTransfer().Import(args[2])
+    else
+        print("Usage: con import <base64_string>")
     end
 
 -- ============================================================================

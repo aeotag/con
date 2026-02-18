@@ -129,6 +129,57 @@ aws:
   ca_no_repos: "Keine CodeArtifact-Repositories konfiguriert."
   ca_select_repo: "CodeArtifact-Repository auswählen:"
 
+transfer:
+  export_usage: "Verwendung: con export <connection|group|oneshot> <Name>"
+  import_usage: "Verwendung: con import <Base64-String>"
+  export_success: "Export erfolgreich (%s: %s)"
+  copy_line: "Kopiere und teile diese Zeile:"
+  decode_failed: "Import-String konnte nicht dekodiert werden. Ist es ein gültiger con-Export?"
+  parse_failed: "Import-Daten konnten nicht geparst werden. Der String ist möglicherweise beschädigt."
+  invalid_payload: "Ungültige Import-Daten — Typ, Name oder Daten fehlen."
+  invalid_type: "Unbekannter Export-Typ: '%s'. Erwartet: connection, group, oneshot."
+  import_header: "Importiere %s: '%s'"
+  exported_with_version: "  (exportiert mit con v%s)"
+  importing_connection: "Importiere Verbindung '%s'..."
+  importing_group: "Importiere Gruppe '%s'..."
+  importing_oneshot: "Importiere Oneshot '%s'..."
+  remapping_vpn: "  Prüfe VPN-Zuordnungen..."
+  vpn_auto_mapped: "%s: VPN umgemappt '%s' → '%s'"
+  vpn_multiple: "%s: Mehrere %s-VPNs auf deinem System gefunden:"
+  vpn_select: "VPN-Nummer auswählen:"
+  vpn_no_match: "%s: Kein %s-VPN in deiner Konfiguration gefunden (Original: '%s')"
+  vpn_keep_or_skip: "Original-VPN-Name behalten (k) oder Adresse überspringen (s)?"
+  vpn_kept_original: "Original-VPN-Name beibehalten: '%s'"
+  address_skipped: "Adresse %s übersprungen."
+  select_ssh_key: "  SSH-Schlüssel auswählen:"
+  exported_key: "(exportierter Schlüssel: %s)"
+  original: "Original"
+  no_ssh_keys: "  Keine SSH-Schlüssel in ~/.ssh/ gefunden"
+  enter_number_or_keep: "Nummer eingeben (oder Enter für Original):"
+  select_import_group: "  Zielgruppe auswählen:"
+  original_group: "Original-Gruppe"
+  create_new_from_export: "aus Export erstellen"
+  enter_group_number: "Gruppennummer eingeben (oder neuen Namen tippen):"
+  collision: "Verbindung '%s' existiert bereits in Gruppe '%s'."
+  overwrite: "Überschreiben"
+  skip: "Überspringen"
+  rename: "Umbenennen"
+  select_action: "Auswahl (1/2/3):"
+  enter_new_name: "Neuer Name:"
+  enter_new_group_name: "Neuer Gruppenname:"
+  skipped: "'%s' übersprungen."
+  connection_imported: "✅ Verbindung '%s' in Gruppe '%s' importiert."
+  group_exists: "Gruppe '%s' existiert bereits."
+  merge_into_existing: "In bestehende Gruppe zusammenführen"
+  rename_group: "Anderen Gruppennamen verwenden"
+  group_imported: "✅ Gruppe '%s' importiert (%d Verbindungen)."
+  oneshot_imported: "✅ Oneshot '%s' importiert."
+  ons_missing_group: "Referenzierte Gruppe '%s' existiert nicht."
+  ons_create_group: "Erstellen? (j/n)"
+  ons_group_warning: "Oneshot referenziert eine nicht vorhandene Gruppe. Es funktioniert erst, wenn die Gruppe erstellt wird."
+  ons_missing_connections: "Referenzierte Verbindungen nicht gefunden: %s"
+  import_success: "Import abgeschlossen."
+
 help:
   main: |
     Verwendung: con [Befehl] [Optionen]
@@ -145,6 +196,8 @@ help:
       --modify --address <Name> <IP> [Opts]   Adresse hinzufügen (--vpn, --type, --network)
       --modify --rm-address <Name> <IP>       Adresse entfernen
       --modify --set <Name> <Feld> <Wert>     Feld setzen (user, protocol, key, port...)
+      export <Typ> <Name>                     Verbindung/Gruppe/Oneshot als Einzeiler exportieren
+      import <Base64-String>                   Aus geteiltem Export-String importieren
       --del group <Gruppe>                    Gruppe löschen
       --del name <Name>                       Verbindung löschen
       vpn [show|up|down|status]               VPN-Verwaltung
