@@ -41,6 +41,15 @@ connection:
   enter_key: "SSH-avaintiedosto (jätä tyhjäksi automaattista varten):"
   enter_protocol: "Protokolla [ssh/telnet/tunnel] (oletus: ssh):"
   select_group: "Valitse ryhmänumero (tai kirjoita uusi ryhmänimi):"
+  address_added: "Osoite lisätty kohteeseen '%s': %s"
+  address_removed: "Osoite poistettu kohteesta '%s': %s"
+  address_not_found: "Osoitetta '%s' ei löydy yhteydestä '%s'."
+  field_set: "Yhteys '%s': %s asetettu arvoon '%s'"
+  field_not_allowed: "Kenttää '%s' ei voi asettaa."
+  editing: "Muokataan yhteyttä '%s' (ryhmä: %s)"
+  edit_hint: "Paina Enter säilyttääksesi nykyisen arvon, kirjoita uusi arvo muuttaaksesi."
+  updated: "Yhteys '%s' päivitetty."
+  updated_moved: "Yhteys '%s' päivitetty ja siirretty ryhmään '%s'."
   auto_connected: "Yhdistetty automaattisesti: %s (%s)"
   multiple_available: "Useita yhteyksiä saatavilla:"
   no_reachable: "Yhteyttä '%s' ei saavuteta."
@@ -129,9 +138,13 @@ help:
       show [--group <ryhmä> | --all]          Näytä tallennetut yhteydet
       --name <nimi> <user@ip>                 Lisää nopeasti ja yhdistä
       --name <nimi> --group <r> <user@ip>     Lisää ryhmään ja yhdistä
+      edit <nimi>                               Muokkaa yhteyttä interaktiivisesti
       --modify --group <vanha> <uusi>         Nimeä ryhmä uudelleen
       --modify --name <vanha> <uusi>          Nimeä yhteys uudelleen
       --modify --move <nimi> <ryhmä>          Siirrä yhteys ryhmään
+      --modify --address <nimi> <ip> [opts]   Lisää osoite (--vpn, --type, --network)
+      --modify --rm-address <nimi> <ip>       Poista osoite
+      --modify --set <nimi> <kenttä> <arvo>   Aseta kenttä (user, protocol, key, port...)
       --del group <ryhmä>                     Poista ryhmä
       --del name <nimi>                        Poista yhteys
       vpn [show|up|down|status]               VPN-hallinta

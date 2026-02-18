@@ -44,6 +44,15 @@ connection:
   enter_key: "SSH key filename (leave blank for auto):"
   enter_protocol: "Protocol [ssh/telnet/tunnel] (default: ssh):"
   select_group: "Select group number (or type a new group name):"
+  address_added: "Address added to '%s': %s"
+  address_removed: "Address removed from '%s': %s"
+  address_not_found: "Address '%s' not found in connection '%s'."
+  field_set: "Connection '%s': %s set to '%s'"
+  field_not_allowed: "Cannot set field '%s'."
+  editing: "Editing connection '%s' (group: %s)"
+  edit_hint: "Press Enter to keep current value, type new value to change."
+  updated: "Connection '%s' updated."
+  updated_moved: "Connection '%s' updated and moved to group '%s'."
   auto_connected: "Auto-connected via %s (%s)"
   multiple_available: "Multiple connections available:"
   no_reachable: "No reachable address found for '%s'."
@@ -139,9 +148,13 @@ help:
       show [--group <group> | --all]          Show saved connections
       --name <name> <user@ip>                 Quick-add and connect
       --name <name> --group <g> <user@ip>     Quick-add to group and connect
+      edit <name>                              Interactively edit a connection
       --modify --group <old> <new>            Rename a group
       --modify --name <old> <new>             Rename a connection
       --modify --move <name> <group>          Move connection to group
+      --modify --address <name> <ip> [opts]   Add address (--vpn, --type, --network)
+      --modify --rm-address <name> <ip>       Remove address
+      --modify --set <name> <field> <value>   Set field (user, protocol, key, port...)
       --del group <group>                     Delete a group
       --del name <name>                       Delete a connection
       vpn [show|up|down|status]               VPN management
