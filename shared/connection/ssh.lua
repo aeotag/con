@@ -11,7 +11,7 @@ local M = {}
 
 --- Check if SSH agent is running and has identities loaded.
 --- @return boolean
-function M.is_agent_ready()
+function M.IsAgentReady()
     local sock = os.getenv("SSH_AUTH_SOCK")
     if not sock or sock == "" then return false end
 
@@ -30,8 +30,8 @@ end
 --- Priority: explicit key > auto-detect from ~/.ssh/
 --- @param explicit_key string|nil   Key filename from connection config
 --- @return string|nil               Full path to key file
-function M.find_key(explicit_key)
-    local home = osdetect.get_home()
+function M.FindKey(explicit_key)
+    local home = osdetect.GetHome()
     local ssh_dir = home .. "/.ssh"
 
     if explicit_key then
@@ -70,14 +70,14 @@ end
 --- @param keyfile string|nil  Path to SSH key
 --- @param extra_args string|nil  Additional SSH arguments
 --- @return string          The full SSH command
-function M.build_command(user, ip, keyfile, extra_args)
+function M.BuildCommand(user, ip, keyfile, extra_args)
     local address = user .. "@" .. ip
     local parts = { "ssh" }
 
     if keyfile then
-        local password = secrets_handler.get_key_password(keyfile)
+        local password = secrets_handler.GetKeyPassword(keyfile)
         if password then
-            if packages.is_tool_installed("sshpass") then
+            if packages.IsToolInstalled("sshpass") then
                 table.insert(parts, 1, "sshpass -p '" .. password .. "'")
             end
         end
@@ -98,7 +98,7 @@ end
 --- @param remote_cmd string   Command to run on the remote host
 --- @param keyfile string|nil
 --- @return string
-function M.build_exec_command(user, ip, remote_cmd, keyfile)
+function M.BuildExecCommand(user, ip, remote_cmd, keyfile)
     local address = user .. "@" .. ip
     local parts = { "ssh" }
 
@@ -119,16 +119,16 @@ end
 --- @param user string
 --- @param ip string
 --- @param keyfile string|nil
-function M.connect(user, ip, keyfile)
-    local cmd = M.build_command(user, ip, keyfile)
+function M.Connect(user, ip, keyfile)
+    local cmd = M.BuildCommand(user, ip, keyfile)
     os.execute(cmd)
 end
 
 --- Test if a host is reachable via ping.
 --- @param ip string
 --- @return boolean
-function M.ping(ip)
-    local os_name = osdetect.detect_os()
+function M.Ping(ip)
+    local os_name = osdetect.DetectOs()
     local cmd
     if os_name == "windows" then
         cmd = "ping -n 1 -w 2000 " .. ip .. " > NUL 2>&1"

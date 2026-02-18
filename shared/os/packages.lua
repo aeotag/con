@@ -39,11 +39,11 @@ local PACKAGE_MANAGERS = {
 
 --- Detect the appropriate package manager for this system.
 --- @return table|nil  { install = "...", check = "..." }
-function M.detect_package_manager()
-    local os_name = osdetect.detect_os()
+function M.DetectPackageManager()
+    local os_name = osdetect.DetectOs()
 
     if os_name == "linux" then
-        local distro = osdetect.detect_linux_distro()
+        local distro = osdetect.DetectLinuxDistro()
         if distro and PACKAGE_MANAGERS[distro] then
             return PACKAGE_MANAGERS[distro], distro
         end
@@ -68,8 +68,8 @@ end
 --- Check if a command-line tool is installed.
 --- @param tool string  The tool name (e.g. "sshpass", "nmcli")
 --- @return boolean
-function M.is_tool_installed(tool)
-    local os_name = osdetect.detect_os()
+function M.IsToolInstalled(tool)
+    local os_name = osdetect.DetectOs()
     local cmd
     if os_name == "windows" then
         cmd = "where " .. tool .. " > NUL 2>&1"
@@ -84,8 +84,8 @@ end
 --- @param tool string  The tool name
 --- @param lang_handler table|nil  Language handler for translated prompts
 --- @return boolean  true if tool is now available
-function M.prompt_install(tool, lang_handler)
-    if M.is_tool_installed(tool) then return true end
+function M.PromptInstall(tool, lang_handler)
+    if M.IsToolInstalled(tool) then return true end
 
     local msg = "Tool '" .. tool .. "' is required but not installed. Install now? (y/n): "
     io.write(msg)
@@ -94,7 +94,7 @@ function M.prompt_install(tool, lang_handler)
         return false
     end
 
-    local pm, distro = M.detect_package_manager()
+    local pm, distro = M.DetectPackageManager()
     if not pm then
         print("Could not detect package manager. Please install '" .. tool .. "' manually.")
         return false
@@ -104,7 +104,7 @@ function M.prompt_install(tool, lang_handler)
     local cmd = pm.install .. " " .. tool
     os.execute(cmd)
 
-    return M.is_tool_installed(tool)
+    return M.IsToolInstalled(tool)
 end
 
 return M

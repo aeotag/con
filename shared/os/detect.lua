@@ -7,7 +7,7 @@ local M = {}
 
 --- Detect the current operating system.
 --- @return string "linux"|"macos"|"windows"|"bsd"|"unknown"
-function M.detect_os()
+function M.DetectOs()
     -- LuaJIT shortcut
     if jit and jit.os then
         local os_name = jit.os:lower()
@@ -35,7 +35,7 @@ end
 
 --- Detect the Linux distribution (if on Linux).
 --- @return string|nil distro name (e.g. "arch", "debian", "ubuntu", "fedora", "opensuse", etc.)
-function M.detect_linux_distro()
+function M.DetectLinuxDistro()
     local f = io.open("/etc/os-release", "r")
     if not f then return nil end
     local content = f:read("*a")
@@ -50,7 +50,7 @@ end
 
 --- Check if WSL is available (Windows).
 --- @return boolean
-function M.is_wsl()
+function M.IsWsl()
     local f = io.open("/proc/version", "r")
     if f then
         local content = f:read("*a")
@@ -62,7 +62,7 @@ end
 
 --- Detect the system language (LANG env variable).
 --- @return string two-letter language code (e.g. "en", "de", "fi")
-function M.detect_system_language()
+function M.DetectSystemLanguage()
     local lang = os.getenv("LANG") or os.getenv("LC_ALL") or os.getenv("LC_MESSAGES") or ""
     local code = lang:match("^(%a%a)")
     if code then return code:lower() end
@@ -71,13 +71,13 @@ end
 
 --- Get the current username.
 --- @return string
-function M.get_username()
+function M.GetUsername()
     return os.getenv("USER") or os.getenv("USERNAME") or "unknown"
 end
 
 --- Get the home directory.
 --- @return string
-function M.get_home()
+function M.GetHome()
     return os.getenv("HOME") or os.getenv("USERPROFILE") or "~"
 end
 

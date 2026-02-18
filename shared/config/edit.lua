@@ -14,14 +14,14 @@ local M = {}
 
 --- Create a new group in connection.yaml.
 --- @param group_name string
-function M.create_group(group_name)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.CreateGroup(group_name)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if data[group_name] then
         print("Group '" .. group_name .. "' already exists.")
         return false
     end
     data[group_name] = {}
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Group '" .. group_name .. "' created.")
     return true
 end
@@ -29,8 +29,8 @@ end
 --- Rename a group.
 --- @param old_name string
 --- @param new_name string
-function M.rename_group(old_name, new_name)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.RenameGroup(old_name, new_name)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if not data[old_name] then
         print("Group '" .. old_name .. "' not found.")
         return false
@@ -41,7 +41,7 @@ function M.rename_group(old_name, new_name)
     end
     data[new_name] = data[old_name]
     data[old_name] = nil
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Group renamed: '" .. old_name .. "' → '" .. new_name .. "'")
     return true
 end
@@ -49,8 +49,8 @@ end
 --- Delete a group (with confirmation).
 --- @param group_name string
 --- @param skip_confirm boolean|nil  Skip y/n prompt
-function M.delete_group(group_name, skip_confirm)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.DeleteGroup(group_name, skip_confirm)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if not data[group_name] then
         print("Group '" .. group_name .. "' not found.")
         return false
@@ -66,15 +66,15 @@ function M.delete_group(group_name, skip_confirm)
     end
 
     data[group_name] = nil
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Group '" .. group_name .. "' deleted.")
     return true
 end
 
 --- List all groups.
 --- @return table  Array of group names
-function M.list_groups()
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.ListGroups()
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     local groups = {}
     for group, _ in pairs(data) do
         table.insert(groups, group)
@@ -91,15 +91,15 @@ end
 --- @param group string
 --- @param name string
 --- @param conn_data table  { protocol, user, key, addresses = { {ip, vpn, type, network} } }
-function M.add_connection(group, name, conn_data)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.AddConnection(group, name, conn_data)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     data[group] = data[group] or {}
     if data[group][name] then
         print("Connection '" .. name .. "' already exists in group '" .. group .. "'.")
         return false
     end
     data[group][name] = conn_data
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Connection '" .. name .. "' added to group '" .. group .. "'.")
     return true
 end
@@ -108,8 +108,8 @@ end
 --- @param group string
 --- @param name string
 --- @param new_data table
-function M.edit_connection(group, name, new_data)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.EditConnection(group, name, new_data)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if not data[group] or not data[group][name] then
         print("Connection '" .. name .. "' not found in group '" .. group .. "'.")
         return false
@@ -118,7 +118,7 @@ function M.edit_connection(group, name, new_data)
     for k, v in pairs(new_data) do
         data[group][name][k] = v
     end
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Connection '" .. name .. "' updated.")
     return true
 end
@@ -127,8 +127,8 @@ end
 --- @param group string
 --- @param name string
 --- @param skip_confirm boolean|nil
-function M.delete_connection(group, name, skip_confirm)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.DeleteConnection(group, name, skip_confirm)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if not data[group] or not data[group][name] then
         print("Connection '" .. name .. "' not found in group '" .. group .. "'.")
         return false
@@ -144,7 +144,7 @@ function M.delete_connection(group, name, skip_confirm)
     end
 
     data[group][name] = nil
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Connection '" .. name .. "' deleted from group '" .. group .. "'.")
     return true
 end
@@ -152,8 +152,8 @@ end
 --- Rename a connection.
 --- @param old_name string
 --- @param new_name string
-function M.rename_connection(old_name, new_name)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.RenameConnection(old_name, new_name)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[old_name] then
             if conns[new_name] then
@@ -162,7 +162,7 @@ function M.rename_connection(old_name, new_name)
             end
             conns[new_name] = conns[old_name]
             conns[old_name] = nil
-            config_handler.save_yaml(Config.Paths.connection, data)
+            config_handler.SaveYaml(Config.Paths.connection, data)
             print("Connection renamed: '" .. old_name .. "' → '" .. new_name .. "' (group: " .. group .. ")")
             return true
         end
@@ -175,8 +175,8 @@ end
 --- @param name string
 --- @param from_group string
 --- @param to_group string
-function M.move_connection(name, from_group, to_group)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.MoveConnection(name, from_group, to_group)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     if not data[from_group] or not data[from_group][name] then
         print("Connection '" .. name .. "' not found in group '" .. from_group .. "'.")
         return false
@@ -194,7 +194,7 @@ function M.move_connection(name, from_group, to_group)
 
     data[to_group][name] = data[from_group][name]
     data[from_group][name] = nil
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     print("Connection '" .. name .. "' moved: '" .. from_group .. "' → '" .. to_group .. "'")
     return true
 end
@@ -203,8 +203,8 @@ end
 --- @param name string
 --- @return table|nil conn_data
 --- @return string|nil group_name
-function M.find_connection(name)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.FindConnection(name)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[name] then
             return conns[name], group
@@ -215,13 +215,13 @@ end
 
 --- Interactive prompt to create a new connection.
 --- @param name string  The connection name to create
-function M.ask_create_connection(name)
+function M.AskCreateConnection(name)
     print("Connection '" .. name .. "' does not exist. Create it? (y/n): ")
     local ans = io.read("*l")
     if ans ~= "y" and ans ~= "Y" then return false end
 
     -- Select group
-    local groups = M.list_groups()
+    local groups = M.ListGroups()
     print("Available groups:")
     for i, g in ipairs(groups) do
         print("  " .. i .. ") " .. g)
@@ -275,7 +275,7 @@ function M.ask_create_connection(name)
         conn_data.key = key_input
     end
 
-    return M.add_connection(group, name, conn_data)
+    return M.AddConnection(group, name, conn_data)
 end
 
 -- ===========================================================================
@@ -286,8 +286,8 @@ end
 --- @param name string  Connection name
 --- @param ip string    IP or hostname
 --- @param opts table   { vpn, type, network, port }
-function M.add_address(name, ip, opts)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.AddAddress(name, ip, opts)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[name] then
             conns[name].addresses = conns[name].addresses or {}
@@ -300,7 +300,7 @@ function M.add_address(name, ip, opts)
             end
             if opts.port then entry.port = tonumber(opts.port) end
             table.insert(conns[name].addresses, entry)
-            config_handler.save_yaml(Config.Paths.connection, data)
+            config_handler.SaveYaml(Config.Paths.connection, data)
             if entry.vpn then
                 print("Address added to '" .. name .. "': " .. ip .. " [VPN: " .. entry.vpn .. "]")
             else
@@ -317,15 +317,15 @@ end
 --- @param name string  Connection name
 --- @param ip string    IP to remove
 --- @param vpn string|nil  Optional VPN to disambiguate
-function M.remove_address(name, ip, vpn)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.RemoveAddress(name, ip, vpn)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[name] then
             local addrs = conns[name].addresses or {}
             for i, addr in ipairs(addrs) do
                 if addr.ip == ip and (not vpn or addr.vpn == vpn) then
                     table.remove(addrs, i)
-                    config_handler.save_yaml(Config.Paths.connection, data)
+                    config_handler.SaveYaml(Config.Paths.connection, data)
                     print("Address removed from '" .. name .. "': " .. ip)
                     return true
                 end
@@ -342,7 +342,7 @@ end
 --- @param name string   Connection name
 --- @param field string  Field to set
 --- @param value string  New value
-function M.set_field(name, field, value)
+function M.SetField(name, field, value)
     local allowed = { user = true, protocol = true, key = true, port = true,
                       instance_id = true, tunnel_type = true, aws_profile = true, aws_region = true }
     if not allowed[field] then
@@ -350,7 +350,7 @@ function M.set_field(name, field, value)
         return false
     end
 
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[name] then
             if field == "port" then
@@ -358,7 +358,7 @@ function M.set_field(name, field, value)
             else
                 conns[name][field] = value
             end
-            config_handler.save_yaml(Config.Paths.connection, data)
+            config_handler.SaveYaml(Config.Paths.connection, data)
             print("Connection '" .. name .. "': " .. field .. " set to '" .. value .. "'")
             return true
         end
@@ -373,8 +373,8 @@ end
 
 --- Interactive edit flow for a connection — walks through all fields.
 --- @param name string  Connection name to edit
-function M.interactive_edit(name)
-    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+function M.InteractiveEdit(name)
+    local data = config_handler.LoadOrCreate(Config.Paths.connection, { default = {} })
     local conn, found_group = nil, nil
     for group, conns in pairs(data) do
         if type(conns) == "table" and conns[name] then
@@ -554,7 +554,7 @@ function M.interactive_edit(name)
         print("\nConnection '" .. name .. "' updated.")
     end
 
-    config_handler.save_yaml(Config.Paths.connection, data)
+    config_handler.SaveYaml(Config.Paths.connection, data)
     return true
 end
 

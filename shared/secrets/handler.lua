@@ -10,8 +10,8 @@ local M = {}
 
 --- Load secrets file.
 --- @return table
-function M.load_secrets()
-    return config_handler.load_or_create(Config.Paths.secrets, {
+function M.LoadSecrets()
+    return config_handler.LoadOrCreate(Config.Paths.secrets, {
         sshkeys = {},
         tools   = {},
     })
@@ -19,15 +19,15 @@ end
 
 --- Save secrets file.
 --- @param data table
-function M.save_secrets(data)
-    config_handler.save_yaml(Config.Paths.secrets, data)
+function M.SaveSecrets(data)
+    config_handler.SaveYaml(Config.Paths.secrets, data)
 end
 
 --- Get the password for an SSH key file.
 --- @param keyfile string  Full path or basename of the key (e.g. "id_ed25519")
 --- @return string|nil     Password, or nil if not stored
-function M.get_key_password(keyfile)
-    local secrets = M.load_secrets()
+function M.GetKeyPassword(keyfile)
+    local secrets = M.LoadSecrets()
     if not secrets.sshkeys then return nil end
 
     -- Try exact match first, then basename
@@ -44,20 +44,20 @@ end
 --- Store a password for an SSH key.
 --- @param keyfile string   Key basename (e.g. "id_ed25519")
 --- @param password string  The password
-function M.set_key_password(keyfile, password)
-    local secrets = M.load_secrets()
+function M.SetKeyPassword(keyfile, password)
+    local secrets = M.LoadSecrets()
     secrets.sshkeys = secrets.sshkeys or {}
     local basename = keyfile:match("([^/\\]+)$") or keyfile
     secrets.sshkeys[basename] = secrets.sshkeys[basename] or {}
     secrets.sshkeys[basename].password = password
-    M.save_secrets(secrets)
+    M.SaveSecrets(secrets)
 end
 
 --- Check if a tool install was already asked about.
 --- @param tool string
 --- @return boolean|nil  true = installed, false = declined, nil = never asked
-function M.get_tool_state(tool)
-    local secrets = M.load_secrets()
+function M.GetToolState(tool)
+    local secrets = M.LoadSecrets()
     if not secrets.tools or not secrets.tools[tool] then
         return nil
     end
@@ -69,14 +69,14 @@ end
 --- Record tool install state.
 --- @param tool string
 --- @param installed boolean
-function M.set_tool_state(tool, installed)
-    local secrets = M.load_secrets()
+function M.SetToolState(tool, installed)
+    local secrets = M.LoadSecrets()
     secrets.tools = secrets.tools or {}
     secrets.tools[tool] = {
         asked = true,
         installed = installed,
     }
-    M.save_secrets(secrets)
+    M.SaveSecrets(secrets)
 end
 
 return M

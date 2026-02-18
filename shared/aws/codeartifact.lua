@@ -12,21 +12,21 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 --- Load AWS config.
 --- @return table
-function M.load_aws_config()
-    return config_handler.load_or_create(Config.Paths.aws, {
+function M.LoadAwsConfig()
+    return config_handler.LoadOrCreate(Config.Paths.aws, {
         sso = {},
         codeartifact = {},
     })
 end
 
 --- Show configured CodeArtifact repositories.
-function M.show_repos()
-    local data = M.load_aws_config()
+function M.ShowRepos()
+    local data = M.LoadAwsConfig()
     local repos = data.codeartifact or {}
 
     if not next(repos) then
@@ -62,13 +62,13 @@ end
 
 --- Authenticate against a CodeArtifact repository.
 --- @param repo_name string|nil  Repository name from aws.yaml
-function M.login(repo_name)
-    if not packages.is_tool_installed("aws") then
+function M.Login(repo_name)
+    if not packages.IsToolInstalled("aws") then
         print("AWS CLI is required. Install it first.")
         return
     end
 
-    local data = M.load_aws_config()
+    local data = M.LoadAwsConfig()
     local repos = data.codeartifact or {}
 
     -- If no repo given, let user pick

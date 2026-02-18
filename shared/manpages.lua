@@ -9,43 +9,43 @@ local M = {}
 
 local function L(key, ...)
     if not lang then lang = require("shared.lang.handler") end
-    return lang.get(key, ...)
+    return lang.Get(key, ...)
 end
 
 --- Show main help.
-function M.show_main()
+function M.ShowMain()
     print(L("help.main"))
 end
 
 --- Show VPN help.
-function M.show_vpn()
+function M.ShowVpn()
     print(L("help.vpn"))
 end
 
 --- Show oneshot help.
-function M.show_oneshot()
+function M.ShowOneshot()
     print(L("help.oneshot"))
 end
 
 --- Show AWS help.
-function M.show_aws()
+function M.ShowAws()
     print(L("help.aws"))
 end
 
 --- Show help for a specific topic.
 --- @param topic string|nil
-function M.show(topic)
+function M.Show(topic)
     if not topic or topic == "main" or topic == "" then
-        M.show_main()
+        M.ShowMain()
     elseif topic == "vpn" then
-        M.show_vpn()
+        M.ShowVpn()
     elseif topic == "ons" or topic == "oneshot" then
-        M.show_oneshot()
+        M.ShowOneshot()
     elseif topic == "aws" then
-        M.show_aws()
+        M.ShowAws()
     else
         print("No help available for: " .. topic)
-        M.show_main()
+        M.ShowMain()
     end
 end
 
