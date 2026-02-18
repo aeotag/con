@@ -53,6 +53,46 @@ local function PrintConnection(name, conn, indent)
     end
 end
 
+--- Natural sort comparator: stage2 < stage10 (not lexicographic).
+--- @param a string
+--- @param b string
+--- @return boolean
+local function NaturalSort(a, b)
+    local function Tokenize(s)
+        local tokens = {}
+        for text, num in s:gmatch("(%D*)(%d*)") do
+            if text ~= "" then table.insert(tokens, text:lower()) end
+            if num ~= "" then table.insert(tokens, tonumber(num)) end
+        end
+        return tokens
+    end
+    local ta, tb = Tokenize(a), Tokenize(b)
+    for i = 1, math.max(#ta, #tb) do
+        local va, vb = ta[i], tb[i]
+        if va == nil then return true end
+        if vb == nil then return false end
+        if type(va) ~= type(vb) then
+            return tostring(va) < tostring(vb)
+        end
+        if va ~= vb then return va < vb end
+    end
+    return false
+end
+
+--- Collect and naturally sort the connection names in a group table.
+--- @param group_data table  { name = conn_data, ... }
+--- @return table  Sorted array of connection names
+local function SortedConnectionNames(group_data)
+    local names = {}
+    for name, conn in pairs(group_data) do
+        if type(conn) == "table" then
+            table.insert(names, name)
+        end
+    end
+    table.sort(names, NaturalSort)
+    return names
+end
+
 --- Show connections: all, by group, or by name.
 --- @param group string|nil   Filter by group
 function M.ShowConnections(group)
@@ -66,14 +106,12 @@ function M.ShowConnections(group)
         end
         print(L("show.header_group", group))
         print("")
-        local empty = true
-        for name, conn in pairs(data[group]) do
-            if type(conn) == "table" then
-                PrintConnection(name, conn)
-                print("")
-                empty = false
-            end
+        local names = SortedConnectionNames(data[group])
+        for _, name in ipairs(names) do
+            PrintConnection(name, data[group][name])
+            print("")
         end
+        local empty = #names == 0
         if empty then
             print("  " .. L("show.no_connections"))
         end
@@ -88,12 +126,11 @@ function M.ShowConnections(group)
         for _, g in ipairs(groups) do
             if type(data[g]) == "table" then
                 print("━━ " .. g .. " ━━")
-                for name, conn in pairs(data[g]) do
-                    if type(conn) == "table" then
-                        PrintConnection(name, conn)
-                        print("")
-                        any = true
-                    end
+                local names = SortedConnectionNames(data[g])
+                for _, name in ipairs(names) do
+                    PrintConnection(name, data[g][name])
+                    print("")
+                    any = true
                 end
             end
         end
