@@ -278,4 +278,284 @@ function M.ask_create_connection(name)
     return M.add_connection(group, name, conn_data)
 end
 
+-- ===========================================================================
+-- MODIFY CONNECTION FIELDS (one-liner commands)
+-- ===========================================================================
+
+--- Add an address entry to an existing connection.
+--- @param name string  Connection name
+--- @param ip string    IP or hostname
+--- @param opts table   { vpn, type, network, port }
+function M.add_address(name, ip, opts)
+    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+    for group, conns in pairs(data) do
+        if type(conns) == "table" and conns[name] then
+            conns[name].addresses = conns[name].addresses or {}
+            local entry = { ip = ip }
+            if opts.vpn then
+                entry.vpn = opts.vpn
+                if opts.type then entry.type = opts.type end
+            else
+                entry.network = opts.network or "local"
+            end
+            if opts.port then entry.port = tonumber(opts.port) end
+            table.insert(conns[name].addresses, entry)
+            config_handler.save_yaml(Config.Paths.connection, data)
+            if entry.vpn then
+                print("Address added to '" .. name .. "': " .. ip .. " [VPN: " .. entry.vpn .. "]")
+            else
+                print("Address added to '" .. name .. "': " .. ip .. " (" .. (entry.network or "local") .. ")")
+            end
+            return true
+        end
+    end
+    print("Connection '" .. name .. "' not found.")
+    return false
+end
+
+--- Remove an address entry from a connection.
+--- @param name string  Connection name
+--- @param ip string    IP to remove
+--- @param vpn string|nil  Optional VPN to disambiguate
+function M.remove_address(name, ip, vpn)
+    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+    for group, conns in pairs(data) do
+        if type(conns) == "table" and conns[name] then
+            local addrs = conns[name].addresses or {}
+            for i, addr in ipairs(addrs) do
+                if addr.ip == ip and (not vpn or addr.vpn == vpn) then
+                    table.remove(addrs, i)
+                    config_handler.save_yaml(Config.Paths.connection, data)
+                    print("Address removed from '" .. name .. "': " .. ip)
+                    return true
+                end
+            end
+            print("Address '" .. ip .. "' not found in connection '" .. name .. "'.")
+            return false
+        end
+    end
+    print("Connection '" .. name .. "' not found.")
+    return false
+end
+
+--- Set a field on an existing connection (user, protocol, key, port).
+--- @param name string   Connection name
+--- @param field string  Field to set
+--- @param value string  New value
+function M.set_field(name, field, value)
+    local allowed = { user = true, protocol = true, key = true, port = true,
+                      instance_id = true, tunnel_type = true, aws_profile = true, aws_region = true }
+    if not allowed[field] then
+        print("Cannot set field '" .. field .. "'. Allowed: user, protocol, key, port, instance_id, tunnel_type, aws_profile, aws_region")
+        return false
+    end
+
+    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+    for group, conns in pairs(data) do
+        if type(conns) == "table" and conns[name] then
+            if field == "port" then
+                conns[name][field] = tonumber(value)
+            else
+                conns[name][field] = value
+            end
+            config_handler.save_yaml(Config.Paths.connection, data)
+            print("Connection '" .. name .. "': " .. field .. " set to '" .. value .. "'")
+            return true
+        end
+    end
+    print("Connection '" .. name .. "' not found.")
+    return false
+end
+
+-- ===========================================================================
+-- INTERACTIVE EDIT (con edit <name>)
+-- ===========================================================================
+
+--- Interactive edit flow for a connection — walks through all fields.
+--- @param name string  Connection name to edit
+function M.interactive_edit(name)
+    local data = config_handler.load_or_create(Config.Paths.connection, { default = {} })
+    local conn, found_group = nil, nil
+    for group, conns in pairs(data) do
+        if type(conns) == "table" and conns[name] then
+            conn = conns[name]
+            found_group = group
+            break
+        end
+    end
+
+    if not conn then
+        print("Connection '" .. name .. "' not found.")
+        return false
+    end
+
+    print("Editing connection '" .. name .. "' (group: " .. found_group .. ")")
+    print("Press Enter to keep current value, type new value to change.\n")
+
+    -- Protocol
+    io.write("  Protocol [" .. (conn.protocol or "ssh") .. "]: ")
+    local input = io.read("*l")
+    if input and input ~= "" then conn.protocol = input end
+
+    -- User
+    io.write("  User [" .. (conn.user or "") .. "]: ")
+    input = io.read("*l")
+    if input and input ~= "" then conn.user = input end
+
+    -- Key
+    io.write("  SSH key [" .. (conn.key or "auto") .. "]: ")
+    input = io.read("*l")
+    if input and input ~= "" then
+        if input == "none" or input == "-" then
+            conn.key = nil
+        else
+            conn.key = input
+        end
+    end
+
+    -- Port (for telnet / tunnel)
+    if conn.protocol == "telnet" or conn.port then
+        io.write("  Port [" .. (conn.port or 23) .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then conn.port = tonumber(input) end
+    end
+
+    -- Tunnel fields
+    if conn.protocol == "tunnel" then
+        io.write("  Tunnel type [" .. (conn.tunnel_type or "ssm-session") .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then conn.tunnel_type = input end
+
+        io.write("  Instance ID [" .. (conn.instance_id or "") .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then conn.instance_id = input end
+
+        io.write("  AWS Profile [" .. (conn.aws_profile or "") .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then conn.aws_profile = input end
+
+        io.write("  AWS Region [" .. (conn.aws_region or "") .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then conn.aws_region = input end
+    end
+
+    -- Addresses
+    print("\n  Current addresses:")
+    local addrs = conn.addresses or {}
+    for i, addr in ipairs(addrs) do
+        local label = addr.ip
+        if addr.vpn then
+            label = label .. " [VPN: " .. addr.vpn .. "]"
+        else
+            label = label .. " (" .. (addr.network or "local") .. ")"
+        end
+        print("    " .. i .. ") " .. label)
+    end
+
+    -- Edit existing addresses
+    for i, addr in ipairs(addrs) do
+        print("\n  Address " .. i .. ":")
+        io.write("    IP [" .. addr.ip .. "]: ")
+        input = io.read("*l")
+        if input and input ~= "" then addr.ip = input end
+
+        if addr.vpn then
+            io.write("    VPN [" .. addr.vpn .. "]: ")
+            input = io.read("*l")
+            if input and input ~= "" then
+                if input == "none" or input == "-" then
+                    addr.vpn = nil
+                    addr.type = nil
+                    addr.network = "local"
+                else
+                    addr.vpn = input
+                end
+            end
+            if addr.vpn then
+                io.write("    VPN type [" .. (addr.type or "") .. "]: ")
+                input = io.read("*l")
+                if input and input ~= "" then addr.type = input end
+            end
+        else
+            io.write("    Network [" .. (addr.network or "local") .. "]: ")
+            input = io.read("*l")
+            if input and input ~= "" then addr.network = input end
+
+            io.write("    Convert to VPN address? (y/n) [n]: ")
+            input = io.read("*l")
+            if input == "y" or input == "Y" then
+                io.write("    VPN name: ")
+                local vpn_name = io.read("*l")
+                if vpn_name and vpn_name ~= "" then
+                    addr.vpn = vpn_name
+                    addr.network = nil
+                    io.write("    VPN type (wireguard/openvpn): ")
+                    local vtype = io.read("*l")
+                    if vtype and vtype ~= "" then addr.type = vtype end
+                end
+            end
+        end
+    end
+
+    -- Add more addresses?
+    while true do
+        io.write("\n  Add another address? (y/n) [n]: ")
+        input = io.read("*l")
+        if input ~= "y" and input ~= "Y" then break end
+
+        io.write("    IP: ")
+        local new_ip = io.read("*l")
+        if not new_ip or new_ip == "" then break end
+
+        io.write("    VPN name (leave blank for local): ")
+        local vpn_name = io.read("*l")
+
+        local new_addr = { ip = new_ip }
+        if vpn_name and vpn_name ~= "" then
+            new_addr.vpn = vpn_name
+            io.write("    VPN type (wireguard/openvpn): ")
+            local vtype = io.read("*l")
+            if vtype and vtype ~= "" then new_addr.type = vtype end
+        else
+            new_addr.network = "local"
+        end
+        table.insert(addrs, new_addr)
+    end
+
+    -- Remove addresses?
+    if #addrs > 1 then
+        io.write("\n  Remove any address? Enter number to remove (or Enter to skip): ")
+        input = io.read("*l")
+        local rm_idx = tonumber(input)
+        if rm_idx and addrs[rm_idx] then
+            print("  Removed: " .. addrs[rm_idx].ip)
+            table.remove(addrs, rm_idx)
+        end
+    end
+
+    conn.addresses = addrs
+
+    -- Move to another group?
+    io.write("\n  Move to different group? [" .. found_group .. "]: ")
+    input = io.read("*l")
+    local new_group = found_group
+    if input and input ~= "" then
+        new_group = input
+    end
+
+    -- Save
+    if new_group ~= found_group then
+        data[found_group][name] = nil
+        data[new_group] = data[new_group] or {}
+        data[new_group][name] = conn
+        print("\nConnection '" .. name .. "' updated and moved to group '" .. new_group .. "'.")
+    else
+        data[found_group][name] = conn
+        print("\nConnection '" .. name .. "' updated.")
+    end
+
+    config_handler.save_yaml(Config.Paths.connection, data)
+    return true
+end
+
 return M

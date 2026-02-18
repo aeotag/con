@@ -166,7 +166,7 @@ elseif cmd == "--name" and args[2] then
     end
 
 -- ============================================================================
--- --modify — Rename / move
+-- --modify — Rename / move / set fields / add-remove addresses
 -- ============================================================================
 elseif cmd == "--modify" then
     local ce = get_config_edit()
@@ -183,8 +183,33 @@ elseif cmd == "--modify" then
         else
             print(lang.get("connection.not_found", name))
         end
+    elseif args[2] == "--address" and args[3] and args[4] then
+        -- con --modify --address <name> <ip> [--vpn <vpn>] [--type <type>] [--network <net>] [--port <port>]
+        local name = args[3]
+        local ip = args[4]
+        local opts = parse_opts(5)
+        ce.add_address(name, ip, opts)
+    elseif args[2] == "--rm-address" and args[3] and args[4] then
+        -- con --modify --rm-address <name> <ip> [--vpn <vpn>]
+        local name = args[3]
+        local ip = args[4]
+        local opts = parse_opts(5)
+        ce.remove_address(name, ip, opts.vpn)
+    elseif args[2] == "--set" and args[3] and args[4] and args[5] then
+        -- con --modify --set <name> <field> <value>
+        ce.set_field(args[3], args[4], args[5])
     else
         get_manpages().show_main()
+    end
+
+-- ============================================================================
+-- EDIT — Interactive edit of a connection
+-- ============================================================================
+elseif cmd == "edit" then
+    if args[2] then
+        get_config_edit().interactive_edit(args[2])
+    else
+        print("Usage: con edit <name>")
     end
 
 -- ============================================================================

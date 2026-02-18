@@ -41,6 +41,15 @@ connection:
   enter_key: "SSH-Schlüssel Dateiname (leer lassen für Auto):"
   enter_protocol: "Protokoll [ssh/telnet/tunnel] (Standard: ssh):"
   select_group: "Gruppennummer wählen (oder neuen Gruppennamen eingeben):"
+  address_added: "Adresse hinzugefügt zu '%s': %s"
+  address_removed: "Adresse entfernt von '%s': %s"
+  address_not_found: "Adresse '%s' nicht gefunden in Verbindung '%s'."
+  field_set: "Verbindung '%s': %s auf '%s' gesetzt"
+  field_not_allowed: "Feld '%s' kann nicht gesetzt werden."
+  editing: "Bearbeite Verbindung '%s' (Gruppe: %s)"
+  edit_hint: "Enter drücken um Wert beizubehalten, neuen Wert eingeben zum Ändern."
+  updated: "Verbindung '%s' aktualisiert."
+  updated_moved: "Verbindung '%s' aktualisiert und nach Gruppe '%s' verschoben."
   auto_connected: "Automatisch verbunden über %s (%s)"
   multiple_available: "Mehrere Verbindungen verfügbar:"
   no_reachable: "Keine erreichbare Adresse für '%s' gefunden."
@@ -129,9 +138,13 @@ help:
       show [--group <Gruppe> | --all]         Gespeicherte Verbindungen anzeigen
       --name <Name> <user@ip>                 Schnell hinzufügen und verbinden
       --name <Name> --group <G> <user@ip>     In Gruppe hinzufügen und verbinden
+      edit <Name>                              Verbindung interaktiv bearbeiten
       --modify --group <alt> <neu>            Gruppe umbenennen
       --modify --name <alt> <neu>             Verbindung umbenennen
       --modify --move <Name> <Gruppe>         Verbindung in Gruppe verschieben
+      --modify --address <Name> <IP> [Opts]   Adresse hinzufügen (--vpn, --type, --network)
+      --modify --rm-address <Name> <IP>       Adresse entfernen
+      --modify --set <Name> <Feld> <Wert>     Feld setzen (user, protocol, key, port...)
       --del group <Gruppe>                    Gruppe löschen
       --del name <Name>                       Verbindung löschen
       vpn [show|up|down|status]               VPN-Verwaltung
